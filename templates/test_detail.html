@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{{ test.title }} — Конструктор опросников{% endblock %}
+{% block heading %}Тест: {{ test.title }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/tests" class="text-sm text-blue-600 hover:underline">&larr; К списку тестов</a>
+</div>
+
+<div class="card p-6 mb-6">
+    <div class="flex justify-between items-start">
+        <div>
+            <h2 class="text-xl font-bold text-gray-900">{{ test.title }}</h2>
+            <p class="text-sm text-gray-500 font-mono mt-1">{{ test.code }}</p>
+            {% if test.description %}
+            <p class="text-gray-700 mt-3 max-w-2xl">{{ test.description }}</p>
+            {% endif %}
+        </div>
+        <div class="text-right space-x-2">
+            <a href="/tests/{{ test.id }}/edit" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded text-sm">Редактор теста</a>
+            <button onclick="createVersion()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">+ Новая версия</button>
+        </div>
+    </div>
+</div>
+
+<div class="card overflow-hidden">
+    <div class="px-4 py-3 bg-gray-50 border-b border-gray-100 text-sm font-medium text-gray-600">Версии теста</div>
+    <table class="min-w-full text-sm">
+        <thead class="bg-white text-gray-500">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">Версия</th>
+                <th class="text-left px-4 py-3 font-medium">Вопросов</th>
+                <th class="text-left px-4 py-3 font-medium">Шкал</th>
+                <th class="text-left px-4 py-3 font-medium">Статус</th>
+                <th class="text-left px-4 py-3 font-medium">Создана</th>
+                <th class="text-right px-4 py-3 font-medium">Действия</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for v in test.versions %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-medium">v{{ v.version_no }}</td>
+                <td class="px-4 py-3">{{ v.question_count }}</td>
+                <td class="px-4 py-3">{{ v.scales|length }}</td>
+                <td class="px-4 py-3">
+                    {% if v.is_published %}
+                        <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">опубликована</span>
+                    {% else %}
+                        <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">черновик</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3 text-gray-500 text-xs">{{ v.created_at.strftime('%d.%m.%Y %H:%M') if v.created_at else '' }}</td>
+                <td class="px-4 py-3 text-right space-x-2">
+                    <a href="/tests/{{ test.id }}/edit?version_id={{ v.id }}" class="text-gray-600 hover:underline">Редактировать</a>
+                    {% if not v.is_published %}
+                    <button onclick="publishVersion({{ v.id }})" class="text-blue-600 hover:underline">Опубликовать</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="px-4 py-8 text-center text-gray-400">Версий пока нет. Создайте первую версию.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const TEST_ID = {{ test.id }};
+
+async function createVersion() {
+    try {
+        const v = await api('POST', '/api/tests/' + TEST_ID + '/versions', { publish: false });
+        toast('Версия v' + v.version_no + ' создана', 'success');
+        location.href = '/tests/' + TEST_ID + '/edit?version_id=' + v.id;
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+async function publishVersion(versionId) {
+    try {
+        await api('POST', '/api/versions/' + versionId + '/publish');
+        toast('Версия опубликована', 'success');
+        location.reload();
+    } catch (e) { toast(e.message, 'error'); }
+}
+</script>
+{% endblock %}

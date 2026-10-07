@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Результаты — Конструктор опросников{% endblock %}
+{% block heading %}Результаты: {{ attempt.version.test.title }}{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex items-center justify-between">
+    <a href="/student" class="text-sm text-blue-600 hover:underline">&larr; Назад</a>
+    <div class="text-xs text-gray-500">
+        Статус: {{ attempt.status }}
+        {% if attempt.finished_at %} · завершено {{ attempt.finished_at.strftime('%d.%m.%Y %H:%M') }}{% endif %}
+        {% if attempt.duration_seconds is not none %} · {{ attempt.duration_seconds }} сек.{% endif %}
+    </div>
+</div>
+
+{% if not attempt.is_completed %}
+<div class="card p-6 text-center text-gray-600">
+    Попытка ещё не завершена. Результаты появятся после прохождения теста.
+</div>
+{% else %}
+
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="card p-5">
+        <div class="text-sm text-gray-500">Итоговый балл</div>
+        <div class="text-3xl font-bold text-gray-900 mt-1">{{ attempt.total_score if attempt.total_score is not none else '—' }}</div>
+    </div>
+    <div class="card p-5">
+        <div class="text-sm text-gray-500">Шкал рассчитано</div>
+        <div class="text-3xl font-bold text-gray-900 mt-1">{{ attempt.scale_results|length }}</div>
+    </div>
+    <div class="card p-5">
+        <div class="text-sm text-gray-500">Тест</div>
+        <div class="text-sm font-semibold text-gray-900 mt-2">{{ attempt.version.test.title }}</div>
+    </div>
+</div>
+
+<div class="card overflow-hidden">
+    <div class="px-4 py-3 bg-gray-50 border-b border-gray-100 text-sm font-medium text-gray-600">Результаты по шкалам</div>
+    <table class="min-w-full text-sm">
+        <thead class="text-gray-500">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">Шкала</th>
+                <th class="text-left px-4 py-3 font-medium">Сырой балл</th>
+                <th class="text-left px-4 py-3 font-medium">Нормализ.</th>
+                <th class="text-left px-4 py-3 font-medium">Уровень</th>
+                <th class="text-left px-4 py-3 font-medium">Интерпретация</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for r in attempt.scale_results %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3">
+                    <div class="font-medium text-gray-900">{{ r.scale.name }}</div>
+                    <div class="text-xs text-gray-400 font-mono">{{ r.scale.code }}</div>
+                </td>
+                <td class="px-4 py-3 font-semibold">{{ r.raw_score }}</td>
+                <td class="px-4 py-3 text-gray-600">{{ r.normalized_score if r.normalized_score is not none else '—' }}</td>
+                <td class="px-4 py-3">
+                    {% if r.level %}
+                        {% if r.level == 'высокий' %}
+                            <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">высокий</span>
+                        {% elif r.level == 'средний' %}
+                            <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">средний</span>
+                        {% else %}
+                            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">низкий</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="text-gray-400">—</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3 text-gray-600">{{ r.interpretation or '—' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="px-4 py-8 text-center text-gray-400">Результаты по шкалам отсутствуют.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

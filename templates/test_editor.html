@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+{% block title %}Редактор: {{ test.title }}{% endblock %}
+{% block heading %}Редактор теста: {{ test.title }}{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex items-center justify-between">
+    <a href="/tests/{{ test.id }}" class="text-sm text-blue-600 hover:underline">&larr; К тесту</a>
+    <div class="text-sm text-gray-500 font-mono">{{ test.code }}</div>
+</div>
+
+<!-- Панель версии -->
+<div class="card p-4 mb-6 flex flex-wrap items-center gap-3">
+    <label class="text-sm font-medium text-gray-600">Версия:</label>
+    {% if test.versions %}
+    <select id="version-select" onchange="onVersionChange()" class="border border-gray-300 rounded px-3 py-2 text-sm">
+        {% for v in test.versions %}
+        <option value="{{ v.id }}">v{{ v.version_no }} — {{ v.status_label }}</option>
+        {% endfor %}
+    </select>
+    <button onclick="publishCurrent()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm">Опубликовать версию</button>
+    {% else %}
+    <span class="text-sm text-gray-500">Версий ещё нет.</span>
+    {% endif %}
+    <button onclick="createVersion()" class="bg-gray-800 hover:bg-gray-900 text-white px-3 py-2 rounded text-sm">+ Новая версия</button>
+    <span id="version-status" class="text-xs text-gray-500 ml-auto"></span>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Шкалы -->
+    <div class="card p-5">
+        <h2 class="text-lg font-semibold mb-3">Шкалы</h2>
+        <div id="scales-list" class="mb-4 text-sm text-gray-400">Загрузка...</div>
+        <div class="border-t pt-4">
+            <h3 class="text-sm font-semibold mb-2">Добавить шкалу</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <input id="s-code" class="border rounded px-2 py-1.5 text-sm" placeholder="код">
+                <input id="s-name" class="border rounded px-2 py-1.5 text-sm" placeholder="название">
+                <select id="s-type" class="border rounded px-2 py-1.5 text-sm">
+                    <option value="sum">sum — сумма</option>
+                    <option value="average">average — среднее</option>
+                    <option value="count">count — количество</option>
+                    <option value="composite">composite — составная</option>
+                </select>
+                <input id="s-min" type="number" step="0.01" class="border rounded px-2 py-1.5 text-sm" placeholder="min">
+                <input id="s-max" type="number" step="0.01" class="border rounded px-2 py-1.5 text-sm" placeholder="max">
+                <input id="s-interp" class="border rounded px-2 py-1.5 text-sm col-span-2" placeholder="интерпретация (текст)">
+            </div>
+            <button onclick="addScale()" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm">Добавить шкалу</button>
+        </div>
+    </div>
+
+    <!-- Вопросы -->
+    <div class="card p-5">
+        <h2 class="text-lg font-semibold mb-3">Вопросы</h2>
+        <div id="questions-list" class="mb-4 text-sm text-gray-400">Загрузка...</div>
+
+        <div class="border-t pt-4">
+            <h3 class="text-sm font-semibold mb-2">Добавить вопрос</h3>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+                <input id="q-code" class="border rounded px-2 py-1.5 text-sm" placeholder="код вопроса">
+                <select id="q-type" class="border rounded px-2 py-1.5 text-sm" onchange="toggleOptions()">
+                    <option value="single_choice">одиночный выбор</option>
+                    <option value="multi_choice">множественный выбор</option>
+                    <option value="scale">шкала Ликерта</option>
+                    <option value="open_text">открытый ответ</option>
+                </select>
+                <textarea id="q-text" rows="2" class="border rounded px-2 py-1.5 text-sm col-span-2" placeholder="Текст вопроса"></textarea>
+            </div>
+
+            <div id="options-block">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs text-gray-500">Варианты ответа и баллы по шкалам</span>
+                    <button onclick="addOptionRow()" class="text-xs text-blue-600 hover:underline">+ вариант</button>
+                </div>
+                <div id="options-list"></div>
+            </div>
+
+            <button onclick="addQuestion()" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm">Добавить вопрос</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const TEST_ID = {{ test.id }};
+let currentVersion = null;
+
+const QUESTION_TYPES = [
+    ['single_choice', 'одиночный выбор'],
+    ['multi_choice', 'множественный выбор'],
+    ['scale', 'шкала Ликерта'],
+    ['open_text', 'открытый ответ']
+];
+const SCALE_TYPES = [
+    ['sum', 'sum — сумма'],
+    ['average', 'average — среднее'],
+    ['count', 'count — количество'],
+    ['composite', 'composite — составная']
+];
+
+function getParam(name) {
+    return new URLSearchParams(location.search).get(name);
+}
+
+/* Значение для атрибута HTML с экранированием кавычек. */
+function attr(v) {
+    if (v === null || v === undefined) return '';
+    return String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+async function init() {
+    const sel = document.getElementById('version-select');
+    if (!sel) return;
+    const wanted = getParam('version_id');
+    if (wanted && [...sel.options].some(o => o.value === wanted)) {
+        sel.value = wanted;
+    }
+    await loadVersion(sel.value);
+}
+
+function onVersionChange() {
+    loadVersion(document.getElementById('version-select').value);
+}
+
+/* ====================== ЗАГРУЗКА ВЕРСИИ ====================== */
+
+async function loadVersion(id) {
+    if (!id) return;
+    document.getElementById('scales-list').innerHTML = 'Загрузка...';
+    document.getElementById('questions-list').innerHTML = 'Загрузка...';
+    try {
+        currentVersion = await api('GET', '/api/versions/' + id);
+        document.getElementById('version-status').textContent =
+            'Статус: ' + (currentVersion.is_published ? 'опубликована' : 'черновик');
+        renderScales();
+        renderQuestions();
+        document.getElementById('options-list').innerHTML = '';
+        if (document.getElementById('q-type').value !== 'open_text') addOptionRow();
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+/* ====================== ШКАЛЫ ====================== */
+
+function renderScales() {
+    const box = document.getElementById('scales-list');
+    if (!currentVersion.scales.length) {
+        box.innerHTML = '<span class="text-gray-400">Шкал пока нет.</span>';
+        return;
+    }
+    box.innerHTML = currentVersion.scales.map(function (s) {
+        const range = (s.min_score != null && s.max_score != null)
+            ? ' · диапазон ' + s.min_score + '–' + s.max_score : '';
+        const formula = (s.formula && s.formula.length)
+            ? '<div class="text-xs text-purple-600">формула: ' + esc(s.formula.join(' ')) + '</div>' : '';
+        return scaleViewHtml(s, range, formula);
+    }).join('');
+}
+
+function scaleViewHtml(s, range, formula) {
+    return '<div class="scale-card" data-scale-id="' + s.id + '">'
+        + '<div class="flex justify-between items-start border-b py-2">'
+        + '<div><div class="font-medium">' + esc(s.name)
+        + ' <span class="text-xs text-gray-400">(' + esc(s.code) + ')</span></div>'
+        + '<div class="text-xs text-gray-500">' + s.scale_type + range + '</div>' + (formula || '')
+        + '</div>'
+        + '<div class="flex items-center gap-2 text-xs">'
+        + '<button onclick="editScale(' + s.id + ')" class="text-blue-600 hover:underline">Изменить</button>'
+        + '<button onclick="deleteScale(' + s.id + ')" class="text-red-500 hover:underline">Удалить</button>'
+        + '</div></div></div>';
+}
+
+function editScale(id) {
+    const s = currentVersion.scales.find(function (x) { return x.id === id; });
+    const card = document.querySelector('.scale-card[data-scale-id="' + id + '"]');
+    if (!s || !card) return;
+    const typeOpts = SCALE_TYPES.map(function (t) {
+        return '<option value="' + t[0] + '"' + (t[0] === s.scale_type ? ' selected' : '') + '>' + t[1] + '</option>';
+    }).join('');
+    card.innerHTML =
+        '<div class="border rounded p-2 my-2 space-y-2 bg-gray-50">'
+        + '<div class="text-xs text-gray-500">Код: <span class="font-mono">' + esc(s.code) + '</span> (не изменяется)</div>'
+        + '<input id="es-name-' + id + '" class="w-full border rounded px-2 py-1 text-sm" placeholder="название" value="' + attr(s.name) + '">'
+        + '<select id="es-type-' + id + '" class="w-full border rounded px-2 py-1 text-sm">' + typeOpts + '</select>'
+        + '<div class="grid grid-cols-2 gap-2">'
+        + '<input id="es-min-' + id + '" type="number" step="0.01" class="border rounded px-2 py-1 text-sm" placeholder="min" value="' + attr(s.min_score) + '">'
+        + '<input id="es-max-' + id + '" type="number" step="0.01" class="border rounded px-2 py-1 text-sm" placeholder="max" value="' + attr(s.max_score) + '">'
+        + '</div>'
+        + '<input id="es-interp-' + id + '" class="w-full border rounded px-2 py-1 text-sm" placeholder="интерпретация" value="' + attr(s.interpretation) + '">'
+        + '<div class="flex gap-2">'
+        + '<button onclick="saveScale(' + id + ')" class="bg-blue-600 text-white px-3 py-1 rounded text-sm">Сохранить</button>'
+        + '<button onclick="loadVersion(currentVersion.id)" class="border px-3 py-1 rounded text-sm">Отмена</button>'
+        + '</div></div>';
+}
+
+async function saveScale(id) {
+    const name = document.getElementById('es-name-' + id).value.trim();
+    if (!name) { toast('Укажите название шкалы', 'error'); return; }
+    const payload = {
+        name: name,
+        scale_type: document.getElementById('es-type-' + id).value,
+        min_score: document.getElementById('es-min-' + id).value || null,
+        max_score: document.getElementById('es-max-' + id).value || null,
+        interpretation: document.getElementById('es-interp-' + id).value.trim() || null
+    };
+    try {
+        await api('PUT', '/api/scales/' + id, payload);
+        toast('Шкала сохранена', 'success');
+        await loadVersion(currentVersion.id);
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+async function deleteScale(id) {
+    if (!confirm('Удалить шкалу? Ключи по ней будут удалены.')) return;
+    try {
+        await api('DELETE', '/api/scales/' + id);
+        toast('Шкала удалена', 'success');
+        await loadVersion(currentVersion.id);
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+async function addScale() {
+    if (!currentVersion) { toast('Сначала создайте версию', 'error'); return; }
+    const code = document.getElementById('s-code').value.trim();
+    const name = document.getElementById('s-name').value.trim();
+    if (!code || !name) { toast('Укажите код и название шкалы', 'error'); return; }
+    const payload = {
+        code: code,
+        name: name,
+        scale_type: document.getElementById('s-type').value,
+        min_score: document.getElementById('s-min').value || null,
+        max_score: document.getElementById('s-max').value || null,
+        interpretation: document.getElementById('s-interp').value.trim() || null
+    };
+    try {
+        await api('POST', '/api/versions/' + currentVersion.id + '/scales', payload);
+        toast('Шкала добавлена', 'success');
+        ['s-code', 's-name', 's-min', 's-max', 's-interp'].forEach(function (id) { document.getElementById(id).value = ''; });
+        await loadVersion(currentVersion.id);
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+/* ====================== ВОПРОСЫ ====================== */
+
+function renderQuestions() {
+    const box = document.getElementById('questions-list');
+    if (!currentVersion.questions.length) {
+        box.innerHTML = '<span class="text-gray-400">Вопросов пока нет.</span>';
+        return;
+    }
+    box.innerHTML = currentVersion.questions.map(function (q) {
+        const opts = q.options.map(function (o) {
+            const sc = Object.keys(o.scores).map(function (k) { return 's' + k + '=' + o.scores[k]; }).join(' ');
+            return '<li class="text-sm text-gray-700">• ' + esc(o.text)
+                + (o.is_correct ? ' <span class="text-green-600 text-xs">[ключ]</span>' : '')
+                + (sc ? ' <span class="text-xs text-gray-400">' + sc + '</span>' : '') + '</li>';
+        }).join('');
+        return '<div class="question-card border-b py-3" data-qid="' + q.id + '">'
+            + '<div class="flex justify-between items-start">'
+            + '<div class="font-medium">' + q.order_num + '. ' + esc(q.text) + '</div>'
+            + '<div class="flex items-center gap-2 text-xs">'
+            + '<button onclick="editQuestion(' + q.id + ')" class="text-blue-600 hover:underline">Редактировать</button>'
+            + '<button onclick="deleteQuestion(' + q.id + ')" class="text-red-500 hover:underline">Удалить</button>'
+            + '</div></div>'
+            + '<div class="text-xs text-gray-500 mb-1">код ' + esc(q.code) + ' · ' + q.question_type
+            + ' · ' + (q.is_required ? 'обязательный' : 'необязательный') + '</div>'
+            + '<ul class="space-y-0.5">' + opts + '</ul></div>';
+    }).join('');
+}
+
+function editQuestion(qid) {
+    const q = currentVersion.questions.find(function (x) { return x.id === qid; });
+    const card = document.querySelector('.question-card[data-qid="' + qid + '"]');
+    if (!q || !card) return;
+    const typeOpts = QUESTION_TYPES.map(function (t) {
+        return '<option value="' + t[0] + '"' + (t[0] === q.question_type ? ' selected' : '') + '>' + t[1] + '</option>';
+    }).join('');
+    card.innerHTML =
+        '<div class="space-y-2 py-1">'
+        + '<div class="text-sm font-semibold">Редактирование вопроса'
+        + ' <span class="text-xs text-gray-400 font-mono">' + esc(q.code) + '</span></div>'
+        + '<textarea id="eq-text-' + q.id + '" rows="2" class="w-full border rounded px-2 py-1.5 text-sm">' + esc(q.text) + '</textarea>'
+        + '<div class="grid grid-cols-2 gap-2">'
+        + '<select id="eq-type-' + q.id + '" class="border rounded px-2 py-1.5 text-sm" onchange="toggleEditOptions(' + q.id + ')">' + typeOpts + '</select>'
+        + '<label class="text-xs flex items-center gap-1"><input type="checkbox" id="eq-required-' + q.id + '"' + (q.is_required ? ' checked' : '') + '> обязательный</label>'
+        + '</div>'
+        + '<div id="eq-options-' + q.id + '" class="' + (q.question_type === 'open_text' ? 'hidden' : '') + '">'
+        + '<div class="flex items-center justify-between mb-1"><span class="text-xs text-gray-500">Варианты и баллы</span>'
+        + '<button type="button" class="text-xs text-blue-600 hover:underline" onclick="addOptionRow(null, document.getElementById(\'eq-options-' + q.id + '\').querySelector(\'.eq-options-list\'))">+ вариант</button></div>'
+        + '<div class="eq-options-list"></div>'
+        + '</div>'
+        + '<div class="flex gap-2">'
+        + '<button onclick="saveQuestion(' + q.id + ')" class="bg-blue-600 text-white px-3 py-1.5 rounded text-sm">Сохранить</button>'
+        + '<button onclick="loadVersion(currentVersion.id)" class="border px-3 py-1.5 rounded text-sm">Отмена</button>'
+        + '</div></div>';
+
+    if (q.question_type !== 'open_text') {
+        const list = card.querySelector('.eq-options-list');
+        (q.options || []).forEach(function (o) { addOptionRow(o, list); });
+    }
+}
+
+function toggleEditOptions(qid) {
+    const type = document.getElementById('eq-type-' + qid).value;
+    document.getElementById('eq-options-' + qid).classList.toggle('hidden', type === 'open_text');
+}
+
+async function saveQuestion(qid) {
+    const text = document.getElementById('eq-text-' + qid).value.trim();
+    const type = document.getElementById('eq-type-' + qid).value;
+    const isRequired = document.getElementById('eq-required-' + qid).checked;
+    if (!text) { toast('Укажите текст вопроса', 'error'); return; }
+    const payload = { text: text, question_type: type, is_required: isRequired };
+    if (type === 'open_text') {
+        payload.options = [];
+    } else {
+        const cont = document.getElementById('eq-options-' + qid);
+        payload.options = collectOptions(cont.querySelector('.eq-options-list'));
+    }
+    try {
+        await api('PUT', '/api/questions/' + qid, payload);
+        toast('Вопрос сохранён', 'success');
+        await loadVersion(currentVersion.id);
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+function scoreInputsHtml(scores) {
+    scores = scores || {};
+    if (!currentVersion || !currentVersion.scales.length) return '';
+    return currentVersion.scales.map(function (s) {
+        const val = (scores[s.id] !== undefined && scores[s.id] !== null) ? scores[s.id] : '';
+        return '<span class="text-xs text-gray-500 whitespace-nowrap">' + esc(s.code) + ': '
+            + '<input type="number" step="0.01" data-scale-id="' + s.id + '" value="' + attr(val) + '" '
+            + 'class="opt-score w-16 border rounded px-1 py-0.5 text-sm"></span>';
+    }).join('');
+}
+
+function addOptionRow(opt, container) {
+    opt = opt || {};
+    const list = container || document.getElementById('options-list');
+    if (!list) return;
+    const row = document.createElement('div');
+    row.className = 'option-row flex flex-wrap items-center gap-2 border rounded p-2 mb-2';
+    if (opt.id) row.setAttribute('data-option-id', opt.id);
+    row.innerHTML =
+        '<input class="opt-text flex-1 min-w-32 border rounded px-2 py-1 text-sm" placeholder="текст варианта" value="' + attr(opt.text) + '">'
+        + '<input class="opt-raw w-20 border rounded px-2 py-1 text-sm" placeholder="знач." value="' + attr(opt.raw_value) + '">'
+        + '<label class="text-xs flex items-center gap-1"><input type="checkbox" class="opt-correct"' + (opt.is_correct ? ' checked' : '') + '> ключ</label>'
+        + '<div class="flex flex-wrap gap-2">' + scoreInputsHtml(opt.scores) + '</div>'
+        + '<button type="button" class="text-red-500 px-1" onclick="this.closest(\'.option-row\').remove()">×</button>';
+    list.appendChild(row);
+}
+
+function toggleOptions() {
+    const isOpen = document.getElementById('q-type').value === 'open_text';
+    document.getElementById('options-block').style.display = isOpen ? 'none' : 'block';
+}
+
+function collectOptions(container) {
+    const rows = container ? container.querySelectorAll('.option-row') : document.querySelectorAll('#options-list .option-row');
+    return [...rows].map(function (row) {
+        const scores = {};
+        row.querySelectorAll('.opt-score').forEach(function (inp) {
+            const v = inp.value.trim();
+            if (v !== '') scores[inp.getAttribute('data-scale-id')] = parseFloat(v);
+        });
+        const correct = row.querySelector('.opt-correct').checked;
+        const oid = row.getAttribute('data-option-id');
+        const item = {
+            text: row.querySelector('.opt-text').value.trim(),
+            raw_value: row.querySelector('.opt-raw').value.trim() || null,
+            is_correct: correct ? true : null,
+            scores: scores
+        };
+        if (oid) item.id = parseInt(oid, 10);
+        return item;
+    }).filter(function (o) { return o.text; });
+}
+
+async function addQuestion() {
+    if (!currentVersion) { toast('Сначала создайте версию', 'error'); return; }
+    const code = document.getElementById('q-code').value.trim();
+    const text = document.getElementById('q-text').value.trim();
+    const type = document.getElementById('q-type').value;
+    if (!code || !text) { toast('Укажите код и текст вопроса', 'error'); return; }
+    const payload = {
+        code: code,
+        text: text,
+        question_type: type,
+        options: type === 'open_text' ? [] : collectOptions()
+    };
+    try {
+        await api('POST', '/api/versions/' + currentVersion.id + '/questions', payload);
+        toast('Вопрос добавлен', 'success');
+        document.getElementById('q-code').value = '';
+        document.getElementById('q-text').value = '';
+        document.getElementById('options-list').innerHTML = '';
+        if (type !== 'open_text') addOptionRow();
+        await loadVersion(currentVersion.id);
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+async function deleteQuestion(id) {
+    if (!confirm('Удалить вопрос?')) return;
+    try {
+        await api('DELETE', '/api/questions/' + id);
+        toast('Вопрос удалён', 'success');
+        await loadVersion(currentVersion.id);
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+/* ====================== ВЕРСИИ ====================== */
+
+async function createVersion() {
+    try {
+        const v = await api('POST', '/api/tests/' + TEST_ID + '/versions', { publish: false });
+        toast('Версия создана', 'success');
+        location.href = '/tests/' + TEST_ID + '/edit?version_id=' + v.id;
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+async function publishCurrent() {
+    if (!currentVersion) { toast('Версия не выбрана', 'error'); return; }
+    try {
+        await api('POST', '/api/versions/' + currentVersion.id + '/publish');
+        toast('Версия опубликована', 'success');
+        await loadVersion(currentVersion.id);
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+init();
+</script>
+{% endblock %}

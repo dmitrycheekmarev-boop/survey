@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Тесты — Конструктор опросников{% endblock %}
+{% block heading %}Тесты{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <p class="text-sm text-gray-500">Каталог тестов и их версий.</p>
+    <button onclick="openCreateModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+        + Создать тест
+    </button>
+</div>
+
+<div class="card overflow-hidden">
+    <table class="min-w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">Код</th>
+                <th class="text-left px-4 py-3 font-medium">Название</th>
+                <th class="text-left px-4 py-3 font-medium">Версии</th>
+                <th class="text-left px-4 py-3 font-medium">Опубликована</th>
+                <th class="text-left px-4 py-3 font-medium">Статус</th>
+                <th class="text-right px-4 py-3 font-medium">Действия</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for test in tests %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-xs text-gray-500">{{ test.code }}</td>
+                <td class="px-4 py-3 font-medium text-gray-900">{{ test.title }}</td>
+                <td class="px-4 py-3 text-gray-600">{{ test.versions|length }}</td>
+                <td class="px-4 py-3 text-gray-600">
+                    {% if test.published_version %}
+                        v{{ test.published_version.version_no }}
+                    {% else %}
+                        <span class="text-gray-400">—</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3">
+                    {% if test.is_active %}
+                        <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">активен</span>
+                    {% else %}
+                        <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">выключен</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3 text-right space-x-2">
+                    <a href="/tests/{{ test.id }}" class="text-blue-600 hover:underline">Открыть</a>
+                    <a href="/tests/{{ test.id }}/edit" class="text-gray-600 hover:underline">Редактор</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="px-4 py-8 text-center text-gray-400">Тестов пока нет. Создайте первый тест.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openCreateModal() {
+    openModal(
+        '<h2 class="text-lg font-semibold mb-4">Новый тест</h2>' +
+        '<div class="space-y-3">' +
+        '  <div><label class="block text-sm font-medium mb-1">Код</label>' +
+        '    <input id="t-code" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="napr_mmpi"></div>' +
+        '  <div><label class="block text-sm font-medium mb-1">Название</label>' +
+        '    <input id="t-title" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Методика ..."></div>' +
+        '  <div><label class="block text-sm font-medium mb-1">Описание</label>' +
+        '    <textarea id="t-desc" rows="3" class="w-full border border-gray-300 rounded px-3 py-2"></textarea></div>' +
+        '</div>' +
+        '<div class="flex justify-end space-x-2 mt-5">' +
+        '  <button onclick="closeModal()" class="px-4 py-2 rounded border border-gray-300 text-sm">Отмена</button>' +
+        '  <button onclick="createTest()" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm">Создать</button>' +
+        '</div>'
+    );
+}
+
+async function createTest() {
+    const code = document.getElementById('t-code').value.trim();
+    const title = document.getElementById('t-title').value.trim();
+    const description = document.getElementById('t-desc').value.trim() || null;
+    if (!code || !title) { toast('Заполните код и название', 'error'); return; }
+    try {
+        const test = await api('POST', '/api/tests', { code: code, title: title, description: description });
+        toast('Тест создан', 'success');
+        location.href = '/tests/' + test.id;
+    } catch (e) { toast(e.message, 'error'); }
+}
+</script>
+{% endblock %}

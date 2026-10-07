@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #f4f6f9; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 420px; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        input { width: 100%; padding: 0.5rem; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 0.75rem; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        button:hover { background-color: #15803d; }
+        .error { color: red; margin-bottom: 1rem; min-height: 1.2em; }
+        .link { margin-top: 1rem; text-align: center; font-size: .9rem; }
+        .link a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Регистрация студента</h2>
+        <div id="error" class="error"></div>
+        <form id="register-form">
+            <div class="form-group">
+                <label for="login">Логин</label>
+                <input type="text" id="login" name="login" required minlength="3" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="full_name">ФИО</label>
+                <input type="text" id="full_name" name="full_name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail (необязательно)</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required minlength="4" autocomplete="new-password">
+            </div>
+            <button type="submit" id="submit-btn">Зарегистрироваться</button>
+        </form>
+        <div class="link">Уже есть аккаунт? <a href="/login">Войти</a></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('register-form');
+        const errorBox = document.getElementById('error');
+        const submitBtn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            errorBox.textContent = '';
+            submitBtn.disabled = true;
+
+            const payload = {
+                login: document.getElementById('login').value.trim(),
+                full_name: document.getElementById('full_name').value.trim(),
+                email: document.getElementById('email').value.trim() || null,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(function () { return {}; });
+                if (!res.ok) {
+                    errorBox.textContent = (typeof data.detail === 'string') ? data.detail : 'Ошибка регистрации';
+                    submitBtn.disabled = false;
+                    return;
+                }
+                location.href = '/login';
+            } catch (ex) {
+                errorBox.textContent = 'Ошибка сети: ' + ex.message;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

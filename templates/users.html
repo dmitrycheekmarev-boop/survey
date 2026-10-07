@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Пользователи — Конструктор опросников{% endblock %}
+{% block heading %}Пользователи{% endblock %}
+
+{% block content %}
+<div class="card overflow-hidden">
+    <table class="min-w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">Логин</th>
+                <th class="text-left px-4 py-3 font-medium">ФИО</th>
+                <th class="text-left px-4 py-3 font-medium">E-mail</th>
+                <th class="text-left px-4 py-3 font-medium">Роли</th>
+                <th class="text-left px-4 py-3 font-medium">Статус</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for u in users %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ u.login }}</td>
+                <td class="px-4 py-3 font-medium text-gray-900">{{ u.full_name }}</td>
+                <td class="px-4 py-3 text-gray-600">{{ u.email or '—' }}</td>
+                <td class="px-4 py-3 space-x-1">
+                    {% for role in u.role_codes %}
+                        <span class="text-xs bg-gray-100 border border-gray-200 text-gray-700 px-2 py-1 rounded">{{ role }}</span>
+                    {% endfor %}
+                </td>
+                <td class="px-4 py-3">
+                    {% if u.is_active %}
+                        <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">активен</span>
+                    {% else %}
+                        <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">заблокирован</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="px-4 py-8 text-center text-gray-400">Пользователей нет.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

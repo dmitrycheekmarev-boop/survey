@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f4f6f9; }
+        .login-card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        input { width: 100%; padding: 0.5rem; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 0.75rem; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #6ea8fe; cursor: default; }
+        .error { color: red; margin-bottom: 1rem; min-height: 1.2em; }
+        .hint { margin-top: 1rem; font-size: .8rem; color: #6b7280; line-height: 1.4; }
+        .hint code { background: #f3f4f6; padding: .1rem .3rem; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Вход в систему</h2>
+        <div id="error" class="error">{{ error or '' }}</div>
+        <form id="login-form" action="/api/auth/login" method="post">
+            <div class="form-group">
+                <label for="login">Логин</label>
+                <input type="text" id="login" name="login" required autocomplete="username" autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
+            </div>
+            <button type="submit" id="submit-btn">Войти</button>
+        </form>
+        <div class="hint">
+            Тестовые учётные записи:<br>
+            <code>admin / admin123</code> — администратор<br>
+            <code>methodist / methodist123</code> — методист<br>
+            <code>student / student123</code> — студент
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('login-form');
+        const errorBox = document.getElementById('error');
+        const submitBtn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            errorBox.textContent = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Вход...';
+
+            const login = document.getElementById('login').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ login: login, password: password })
+                });
+                const data = await res.json().catch(function () { return {}; });
+
+                if (!res.ok) {
+                    errorBox.textContent = (typeof data.detail === 'string')
+                        ? data.detail
+                        : 'Неверный логин или пароль';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Войти';
+                    return;
+                }
+                location.href = data.redirect || '/dashboard';
+            } catch (ex) {
+                errorBox.textContent = 'Ошибка сети: ' + ex.message;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Войти';
+            }
+        });
+    </script>
+</body>
+</html>

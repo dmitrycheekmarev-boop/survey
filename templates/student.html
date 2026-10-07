@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Мои тесты — Конструктор опросников{% endblock %}
+{% block heading %}Мои тесты{% endblock %}
+
+{% block content %}
+<h2 class="text-lg font-semibold mb-3">Назначенные последовательности</h2>
+{% if assignments %}
+<div class="space-y-4 mb-8">
+    {% for a in assignments %}
+    <div class="card p-5">
+        <div class="flex justify-between items-start mb-3">
+            <div>
+                <div class="font-semibold text-gray-900">{{ a.sequence.title }}</div>
+                {% if a.sequence.description %}<div class="text-xs text-gray-500">{{ a.sequence.description }}</div>{% endif %}
+            </div>
+            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{{ a.progress_percent }}%</span>
+        </div>
+        <ul class="divide-y divide-gray-100">
+            {% for p in a.progress_items %}
+            <li class="flex items-center justify-between py-2">
+                <span class="text-sm text-gray-800">{{ p.test.title }}</span>
+                <span class="flex items-center space-x-3">
+                    {% if p.status == 'completed' %}
+                        <span class="text-xs text-green-600">завершён</span>
+                        {% if p.attempt_id %}
+                        <a href="/results/{{ p.attempt_id }}" class="text-xs text-blue-600 hover:underline">Результат</a>
+                        {% endif %}
+                    {% elif p.status == 'in_progress' %}
+                        <span class="text-xs text-blue-600">в процессе</span>
+                        {% if p.attempt_id %}
+                        <a href="/attempt/{{ p.attempt_id }}" class="text-xs text-blue-600 hover:underline">Продолжить</a>
+                        {% endif %}
+                    {% else %}
+                        <span class="text-xs text-gray-400">не начат</span>
+                    {% endif %}
+                    <button onclick="startTest({{ p.test.id }}, {{ a.sequence.id }})"
+                            class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">Пройти</button>
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-sm text-gray-400 mb-8">Назначенных последовательностей нет.</p>
+{% endif %}
+
+<h2 class="text-lg font-semibold mb-3">Доступные тесты</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for t in tests %}
+    <div class="card p-5 flex flex-col justify-between">
+        <div>
+            <div class="font-semibold text-gray-900">{{ t.title }}</div>
+            {% if t.description %}<div class="text-xs text-gray-500 mt-1">{{ t.description }}</div>{% endif %}
+        </div>
+        <div class="mt-4 flex items-center justify-between">
+            <span class="text-xs text-gray-400">{{ t.published_version.version_no if t.published_version else '—' }} версия</span>
+            {% if t.published_version %}
+            <button onclick="startTest({{ t.id }}, null)" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded">Начать</button>
+            {% else %}
+            <span class="text-xs text-gray-400">нет опубликованной версии</span>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="text-sm text-gray-400">Доступных тестов нет.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function startTest(testId, sequenceId) {
+    const body = { test_id: testId };
+    if (sequenceId) body.sequence_id = sequenceId;
+    try {
+        const res = await api('POST', '/api/attempts', body);
+        location.href = '/attempt/' + res.attempt.id;
+    } catch (e) { toast(e.message, 'error'); }
+}
+</script>
+{% endblock %}

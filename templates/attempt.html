@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Прохождение теста{% endblock %}
+{% block heading %}{{ attempt.version.test.title }}{% endblock %}
+
+{% block content %}
+{% if attempt.is_finished %}
+<div class="card p-6 text-center">
+    <p class="text-gray-700 mb-4">Эта попытка уже завершена.</p>
+    <a href="/results/{{ attempt.id }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Посмотреть результаты</a>
+</div>
+{% else %}
+
+{% if attempt.version.instruction %}
+<div class="card p-5 mb-5 bg-blue-50 border border-blue-100">
+    <div class="text-sm text-blue-900">{{ attempt.version.instruction }}</div>
+</div>
+{% endif %}
+
+<form id="attempt-form">
+    {% for q in attempt.version.questions %}
+    <div class="card p-5 mb-4">
+        <div class="font-medium text-gray-900 mb-3">
+            {{ q.order_num }}. {{ q.text }}
+            {% if q.is_required %}<span class="text-red-500">*</span>{% endif %}
+        </div>
+
+        {% if q.question_type == 'open_text' %}
+            <textarea data-qid="{{ q.id }}" rows="3"
+                      class="ans-text w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                      placeholder="Ваш ответ..."></textarea>
+        {% else %}
+            {% for o in q.answer_options %}
+                {% if q.question_type == 'multi_choice' %}
+                <label class="flex items-center gap-2 py-1 cursor-pointer">
+                    <input type="checkbox" data-qid="{{ q.id }}" class="ans-opt" value="{{ o.id }}">
+                    <span class="text-sm text-gray-800">{{ o.text }}</span>
+                </label>
+                {% else %}
+                <label class="flex items-center gap-2 py-1 cursor-pointer">
+                    <input type="radio" name="q{{ q.id }}" data-qid="{{ q.id }}" class="ans-opt" value="{{ o.id }}">
+                    <span class="text-sm text-gray-800">{{ o.text }}</span>
+                </label>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="flex justify-end space-x-3 mb-10">
+        <button type="button" onclick="abortAttempt()" class="px-4 py-2 rounded border border-gray-300 text-sm text-gray-600">Прервать</button>
+        <button type="submit" id="finish-btn" class="px-6 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm">Завершить тест</button>
+    </div>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+const ATTEMPT_ID = {{ attempt.id }};
+const IS_FINISHED = {{ 'true' if attempt.is_finished else 'false' }};
+
+function collectAnswers() {
+    const map = {};
+    document.querySelectorAll('.ans-opt:checked').forEach(function (inp) {
+        const qid = inp.getAttribute('data-qid');
+        (map[qid] = map[qid] || []).push(parseInt(inp.value));
+    });
+    const result = [];
+    document.querySelectorAll('.ans-text').forEach(function (ta) {
+        const qid = ta.getAttribute('data-qid');
+        result.push({ question_id: parseInt(qid), option_ids: [], text: ta.value });
+    });
+    Object.keys(map).forEach(function (qid) {
+        result.push({ question_id: parseInt(qid), option_ids: map[qid] });
+    });
+    return result;
+}
+
+if (!IS_FINISHED) {
+    document.getElementById('attempt-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const btn = document.getElementById('finish-btn');
+        btn.disabled = true;
+        btn.textContent = 'Сохранение...';
+        try {
+            await api('POST', '/api/attempts/' + ATTEMPT_ID + '/answers', {
+                answers: collectAnswers(),
+                finish: true
+            });
+            location.href = '/results/' + ATTEMPT_ID;
+        } catch (err) {
+            toast(err.message, 'error');
+            btn.disabled = false;
+            btn.textContent = 'Завершить тест';
+        }
+    });
+}
+
+async function abortAttempt() {
+    if (!confirm('Прервать прохождение теста?')) return;
+    try {
+        await api('POST', '/api/attempts/' + ATTEMPT_ID + '/abort');
+        location.href = '/student';
+    } catch (e) { toast(e.message, 'error'); }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Дашборд — Конструктор опросников{% endblock %}
+{% block heading %}Дашборд{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="card p-5">
+        <div class="text-sm text-gray-500">Всего тестов</div>
+        <div class="text-3xl font-bold text-gray-900 mt-1">{{ tests_count }}</div>
+    </div>
+    <div class="card p-5">
+        <div class="text-sm text-gray-500">Последовательностей</div>
+        <div class="text-3xl font-bold text-gray-900 mt-1">{{ sequences_count }}</div>
+    </div>
+    <div class="card p-5">
+        <div class="text-sm text-gray-500">Роль</div>
+        <div class="text-lg font-semibold text-gray-900 mt-2">{{ user.role_codes|join(', ') }}</div>
+    </div>
+    <div class="card p-5">
+        <div class="text-sm text-gray-500">Пользователь</div>
+        <div class="text-lg font-semibold text-gray-900 mt-2 truncate">{{ user.full_name }}</div>
+    </div>
+</div>
+
+<div class="card p-6">
+    <h2 class="text-lg font-semibold mb-4">Быстрые действия</h2>
+    <div class="flex flex-wrap gap-3">
+        <a href="/tests" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Управление тестами</a>
+        <a href="/sequences" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded">Последовательности</a>
+        <a href="/assignments" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded">Назначения</a>
+        <a href="/statistics" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded">Статистика</a>
+        {% if user.is_admin %}
+        <a href="/users" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded">Пользователи</a>
+        <a href="/audit" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded">Журнал аудита</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card p-6 mt-6">
+    <h2 class="text-lg font-semibold mb-2">Права доступа</h2>
+    <p class="text-sm text-gray-500 mb-3">Набор прав вашей роли в системе:</p>
+    <div class="flex flex-wrap gap-2">
+        {% for perm in user.roles %}
+            {% for p in perm.permissions %}
+                <span class="text-xs bg-gray-100 border border-gray-200 text-gray-700 px-2 py-1 rounded">{{ p.code }}</span>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

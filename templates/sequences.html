@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Последовательности — Конструктор опросников{% endblock %}
+{% block heading %}Последовательности тестов{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <p class="text-sm text-gray-500">Наборы тестов, которые назначаются студентам.</p>
+    <button onclick="openCreateModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">+ Создать последовательность</button>
+</div>
+
+<div class="card overflow-hidden">
+    <table class="min-w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">Название</th>
+                <th class="text-left px-4 py-3 font-medium">Тестов</th>
+                <th class="text-left px-4 py-3 font-medium">Состав</th>
+                <th class="text-right px-4 py-3 font-medium">Действия</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for s in sequences %}
+            <tr class="hover:bg-gray-50 align-top">
+                <td class="px-4 py-3">
+                    <div class="font-medium text-gray-900">{{ s.title }}</div>
+                    {% if s.description %}<div class="text-xs text-gray-500">{{ s.description }}</div>{% endif %}
+                </td>
+                <td class="px-4 py-3">{{ s.tests_count }}</td>
+                <td class="px-4 py-3">
+                    <ol class="list-decimal list-inside text-gray-600 text-xs space-y-0.5">
+                        {% for item in s.items %}
+                        <li>{{ item.test.title }}</li>
+                        {% endfor %}
+                    </ol>
+                </td>
+                <td class="px-4 py-3 text-right">
+                    <button onclick="openAssignModal({{ s.id }}, '{{ s.title|e }}')" class="text-blue-600 hover:underline">Назначить студентам</button>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="px-4 py-8 text-center text-gray-400">Последовательностей пока нет.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function openCreateModal() {
+    let tests = [];
+    try { tests = await api('GET', '/api/tests'); } catch (e) { toast(e.message, 'error'); return; }
+    if (!tests.length) { toast('Сначала создайте хотя бы один тест', 'error'); return; }
+
+    const list = tests.map(function (t) {
+        return '<label class="flex items-center gap-2 py-1 text-sm">'
+            + '<input type="checkbox" class="seq-test" value="' + t.id + '">'
+            + '<span>' + esc(t.title) + ' <span class="text-xs text-gray-400 font-mono">' + esc(t.code) + '</span></span></label>';
+    }).join('');
+
+    openModal(
+        '<h2 class="text-lg font-semibold mb-4">Новая последовательность</h2>'
+        + '<div class="space-y-3">'
+        + '<div><label class="block text-sm font-medium mb-1">Название</label>'
+        + '<input id="seq-title" class="w-full border rounded px-3 py-2"></div>'
+        + '<div><label class="block text-sm font-medium mb-1">Описание</label>'
+        + '<textarea id="seq-desc" rows="2" class="w-full border rounded px-3 py-2"></textarea></div>'
+        + '<div><label class="block text-sm font-medium mb-1">Тесты (порядок — сверху вниз)</label>'
+        + '<div class="border rounded p-3 max-h-56 overflow-auto">' + list + '</div></div>'
+        + '</div>'
+        + '<div class="flex justify-end space-x-2 mt-5">'
+        + '<button onclick="closeModal()" class="px-4 py-2 rounded border text-sm">Отмена</button>'
+        + '<button onclick="createSequence()" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm">Создать</button>'
+        + '</div>'
+    );
+}
+
+async function createSequence() {
+    const title = document.getElementById('seq-title').value.trim();
+    if (!title) { toast('Укажите название', 'error'); return; }
+    const testIds = [...document.querySelectorAll('.seq-test:checked')].map(function (c) { return parseInt(c.value); });
+    const payload = {
+        title: title,
+        description: document.getElementById('seq-desc').value.trim() || null,
+        test_ids: testIds
+    };
+    try {
+        await api('POST', '/api/sequences', payload);
+        toast('Последовательность создана', 'success');
+        location.reload();
+    } catch (e) { toast(e.message, 'error'); }
+}
+
+async function openAssignModal(sequenceId, title) {
+    let students = [];
+    let note = '';
+    try {
+        students = await api('GET', '/api/users?role=student');
+    } catch (e) {
+        note = '<p class="text-xs text-red-500 mb-2">Список студентов доступен только администратору. '
+             + 'Введите ID пользователей вручную (через запятую).</p>';
+    }
+
+    let bodyHtml = '';
+    if (students.length) {
+        bodyHtml = students.map(function (u) {
+            return '<label class="flex items-center gap-2 py-1 text-sm">'
+                + '<input type="checkbox" class="assign-user" value="' + u.id + '">'
+                + '<span>' + esc(u.full_name) + ' <span class="text-xs text-gray-400">' + esc(u.login) + '</span></span></label>';
+        }).join('');
+    } else {
+        bodyHtml = note + '<input id="assign-ids" class="w-full border rounded px-3 py-2 text-sm" placeholder="1, 2, 3">';
+    }
+
+    openModal(
+        '<h2 class="text-lg font-semibold mb-1">Назначение</h2>'
+        + '<p class="text-sm text-gray-500 mb-4">' + esc(title) + '</p>'
+        + '<div class="border rounded p-3 max-h-64 overflow-auto">' + bodyHtml + '</div>'
+        + '<div class="flex justify-end space-x-2 mt-5">'
+        + '<button onclick="closeModal()" class="px-4 py-2 rounded border text-sm">Отмена</button>'
+        + '<button onclick="assignUsers(' + sequenceId + ')" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm">Назначить</button>'
+        + '</div>'
+    );
+}
+
+async function assignUsers(sequenceId) {
+    let userIds = [...document.querySelectorAll('.assign-user:checked')].map(function (c) { return parseInt(c.value); });
+    if (!userIds.length) {
+        const manual = document.getElementById('assign-ids');
+        if (manual && manual.value.trim()) {
+            userIds = manual.value.split(',').map(function (s) { return parseInt(s.trim()); }).filter(Boolean);
+        }
+    }
+    if (!userIds.length) { toast('Выберите хотя бы одного студента', 'error'); return; }
+    try {
+        const res = await api('POST', '/api/sequences/' + sequenceId + '/assign', { user_ids: userIds });
+        toast('Назначено: ' + res.assigned_user_ids.length, 'success');
+        closeModal();
+    } catch (e) { toast(e.message, 'error'); }
+}
+</script>
+{% endblock %}
