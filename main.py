@@ -805,7 +805,7 @@ def api_login(payload: LoginRequest, request: Request, db: Session = Depends(get
     return {"ok": True, "user": user_to_dict(user), "redirect": redirect_map.get(role, "/dashboard")}
 
 
-@app.post("/api/auth/logout", tags=["auth"])
+@app.post("/api/logout", tags=["auth"])
 def api_logout(request: Request, db: Session = Depends(get_db)):
     """Выход из системы (POST). Очищает сессию и возвращает {"ok": true}."""
     _logout_session(request, db)

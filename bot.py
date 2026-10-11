@@ -53,6 +53,59 @@ async def init_db():
         logging.error(f"Ошибка подключения к PostgreSQL: {e}")
 
 
+# --- РАБОТА С ИСТОРИЕЙ СООБЩЕНИЙ В БД ---
+
+async def save_chat_message(user_id: int, role: str, content: str):
+    """Сохраняет сообщение в таблицу chat_history."""
+    if not db_pool:
+        return
+    try:
+        async with db_pool.acquire() as conn:
+            await conn.execute(
+                "INSERT INTO chat_history (user_id, role, content) VALUES ($1, $2, $3)",
+                user_id, role, content
+            )
+    except Exception as e:
+        logging.error(f"Ошибка сохранения истории в БД: {e}")
+
+
+async def load_chat_history(user_id: int, limit: int = 12) -> list:
+    """
+    Загружает последние `limit` сообщений пользователя из БД,
+    упорядоченные по хронологии, с обрезкой слишком длинных текстов.
+    """
+    if not db_pool:
+        return []
+    try:
+        async with db_pool.acquire() as conn:
+            # Берем последние limit сообщений, а затем разворачиваем их по возрастанию id
+            query = """
+                SELECT role, content 
+                FROM (
+                    SELECT id, role, content 
+                    FROM chat_history 
+                    WHERE user_id = $1 
+                    ORDER BY id DESC 
+                    LIMIT $2
+                ) sub
+                ORDER BY id ASC;
+            """
+            rows = await conn.fetch(query, user_id, limit)
+
+            history = []
+            for r in rows:
+                content = r["content"]
+                # ОБРЕЗКА: Если в истории лежит гигантский файл (например main.py),
+                # обрезаем его до 2500 символов, чтобы не забивать контекст OpenRouter
+                if len(content) > 2500:
+                    content = content[:2500] + "\n... [часть содержимого обрезана для экономии контекста]"
+
+                history.append({"role": r["role"], "content": content})
+            return history
+    except Exception as e:
+        logging.error(f"Ошибка загрузки истории из БД: {e}")
+        return []
+
 # --- ИНСТРУМЕНТЫ АГЕНТА ДЛЯ РАБОТЫ С ФАЙЛАМИ ---
 
 def tool_write_file(path: str, content: str) -> str:
@@ -165,6 +218,13 @@ async def cancel_handler(message: types.Message):
     else:
         await message.answer("Сейчас нет активных выполняющихся задач.")
 
+@dp.message(Command("clear"))
+async def clear_history_cmd(message: types.Message):
+    user_id = message.from_user.id
+    if db_pool:
+        async with db_pool.acquire() as conn:
+            await conn.execute("DELETE FROM chat_history WHERE user_id = $1", user_id)
+    await message.answer("🧹 История диалога и контекст успешно очищены!")
 
 @dp.message()
 async def agent_handle_message(message: types.Message):
@@ -187,20 +247,26 @@ async def agent_handle_message(message: types.Message):
 
 
 async def run_agent_loop(message: types.Message):
+    user_id = message.from_user.id
     user_prompt = message.text
+
     status_msg = await message.answer("🧠 Анализирую задачу...\n*(для отмены отправь /cancel)*", parse_mode="Markdown")
 
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": user_prompt}
-    ]
+    # 1. Сохраняем запрос пользователя в БД
+    await save_chat_message(user_id, "user", user_prompt)
 
-    async with httpx.AsyncClient(timeout=120.0) as client:
-        for step in range(8):
-            await asyncio.sleep(0)  # Точка проверки отмены от пользователя
+    # 2. Загружаем сохранённую историю диалога (последние 10-12 сообщений)
+    chat_history = await load_chat_history(user_id, limit=12)
+
+    # 3. Собираем итоговый массив сообщений для OpenRouter
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}] + chat_history
+
+    async with httpx.AsyncClient(timeout=60.0) as client:  # Поставили таймаут 60 сек вместо 120
+        for step in range(6):  # Сократили кол-во шагов с 8 до 6, чтобы бот не уходил в бесконечные циклы
+            await asyncio.sleep(0)  # Точка проверки отмены
 
             payload = {
-                "model": "deepseek/deepseek-v4.1-flash",
+                "model": "anthropic/claude-haiku-5.5",
                 "messages": messages,
                 "tools": TOOLS,
                 "tool_choice": "auto"
@@ -212,10 +278,11 @@ async def run_agent_loop(message: types.Message):
             }
 
             try:
-                response = await client.post("https://openrouter.ai/api/v1/chat/completions", json=payload, headers=headers)
+                response = await client.post("https://openrouter.ai/api/v1/chat/completions", json=payload,
+                                             headers=headers)
                 res_data = response.json()
             except Exception as req_err:
-                await status_msg.edit_text(f"❌ Ошибка сети: {req_err}")
+                await status_msg.edit_text(f"❌ Ошибка сети или таймаут: {req_err}")
                 return
 
             if "choices" not in res_data:
@@ -230,8 +297,8 @@ async def run_agent_loop(message: types.Message):
                     fn_name = tool_call["function"]["name"]
                     fn_args = json.loads(tool_call["function"]["arguments"])
 
-                    # Безопасное извлечение аргументов для защиты от KeyError
-                    file_path = fn_args.get("path") or fn_args.get("filepath") or fn_args.get("file_path") or fn_args.get("file") or ""
+                    file_path = fn_args.get("path") or fn_args.get("filepath") or fn_args.get(
+                        "file_path") or fn_args.get("file") or ""
                     file_content = fn_args.get("content") or fn_args.get("text") or fn_args.get("code") or ""
 
                     try:
@@ -244,28 +311,32 @@ async def run_agent_loop(message: types.Message):
 
                     tool_result = ""
                     if fn_name == "write_file":
-                        if not file_path:
-                            tool_result = "Ошибка: не указан path"
-                        else:
-                            tool_result = tool_write_file(file_path, file_content)
-
+                        tool_result = tool_write_file(file_path,
+                                                      file_content) if file_path else "Ошибка: не указан path"
                     elif fn_name == "read_file":
-                        if not file_path:
-                            tool_result = "Ошибка: не указан path"
-                        else:
-                            tool_result = tool_read_file(file_path)
-
+                        tool_result = tool_read_file(file_path) if file_path else "Ошибка: не указан path"
                     elif fn_name == "list_files":
                         directory = fn_args.get("directory") or file_path or "."
                         tool_result = tool_list_files(directory)
 
+                    # Обрезаем ответ инструмента перед добавлением в контекст, чтобы не раздувать память
+                    if len(tool_result) > 3000:
+                        tool_result_for_context = tool_result[
+                                                  :3000] + "\n... [результат слишком длинный, часть вырезана]"
+                    else:
+                        tool_result_for_context = tool_result
+
                     messages.append({
                         "role": "tool",
                         "tool_call_id": tool_call["id"],
-                        "content": tool_result
+                        "content": tool_result_for_context
                     })
             else:
                 final_text = choice.get("content", "Завершено.")
+
+                # 4. Сохраняем финальный ответ бота в БД для следующих запросов
+                await save_chat_message(user_id, "assistant", final_text)
+
                 try:
                     await status_msg.edit_text(final_text, parse_mode="Markdown")
                 except Exception:
