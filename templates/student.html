@@ -45,6 +45,28 @@
 {% else %}
 <p class="text-sm text-gray-400 mb-8">Назначенных последовательностей нет.</p>
 {% endif %}
+
+<h2 class="text-lg font-semibold mb-3">Доступные тесты</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for t in tests %}
+    <div class="card p-5 flex flex-col justify-between">
+        <div>
+            <div class="font-semibold text-gray-900">{{ t.title }}</div>
+            {% if t.description %}<div class="text-xs text-gray-500 mt-1">{{ t.description }}</div>{% endif %}
+        </div>
+        <div class="mt-4 flex items-center justify-between">
+            <span class="text-xs text-gray-400">{{ t.published_version.version_no if t.published_version else '—' }} версия</span>
+            {% if t.published_version %}
+            <button onclick="startTest({{ t.id }}, null)" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded">Начать</button>
+            {% else %}
+            <span class="text-xs text-gray-400">нет опубликованной версии</span>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="text-sm text-gray-400">Доступных тестов нет.</p>
+    {% endfor %}
+</div>
 {% endblock %}
 
 {% block scripts %}

@@ -264,7 +264,6 @@ def version_to_dict(version: TestVersion, with_content: bool = False) -> dict:
         "test_id": version.test_id,
         "version_no": version.version_no,
         "version_number": version.version_no,
-        "comment": version.comment,
         "is_published": version.is_published,
         "status": version.status_label,
         "instruction": version.instruction,
@@ -453,7 +452,6 @@ class VersionCreate(BaseModel):
 
     Все поля опциональны:
       * version_number — явный номер версии (если не задан — берётся следующий);
-      * comment        — комментарий/причина создания версии;
       * instruction    — инструкция для студента;
       * publish        — опубликовать версию сразу после создания;
       * copy_from_version_id — скопировать структуру (шкалы, вопросы,
@@ -886,25 +884,20 @@ def api_register(payload: RegisterRequest, db: Session = Depends(get_db)):
 
 @app.get("/api/tests", tags=["tests"])
 def list_tests(
-        db: Session = Depends(get_db),
-        user: User = Depends(get_current_user),
-        only_published: bool = False,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+    only_published: bool = False,
 ):
+    """Список тестов. Студенты видят только опубликованные."""
     query = db.query(Test)
     staff = user.has_role(ROLE_ADMIN) or user.has_role(ROLE_METHODIST)
     if not staff:
         only_published = True
-
     if only_published:
         query = query.filter(Test.is_active.is_(True))
-
     tests = query.order_by(Test.title).all()
-
-    # Добавляем фильтрацию версий перед отправкой
-    if only_published:
-        tests = [t for t in tests if t.published_version is not None]
-
     return [test_to_dict(t) for t in tests]
+
 
 @app.post("/api/tests", tags=["tests"], status_code=status.HTTP_201_CREATED)
 def create_test(
@@ -965,15 +958,84 @@ def update_test(
 def delete_test(
     test_id: int,
     db: Session = Depends(get_db),
-    user: User = Depends(require_permission("system.manage")),
+    user: User = Depends(require_permission("tests.edit")),
 ):
-    """Удалить тест (только администратор)."""
+    """Удалить тест (только администратор/методист)."""
     test = db.get(Test, test_id)
     if not test:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Тест не найден")
-    db.delete(test)
+
+    # 1. Удаляем привязки к прогрессу пользователей
+    db.query(models.UserTestProgress).filter(models.UserTestProgress.test_id == test_id).delete(synchronize_session=False)
+
+    # 2. Удаляем тест из последовательностей
+    db.query(models.SequenceItem).filter(models.SequenceItem.test_id == test_id).delete(synchronize_session=False)
+
+    # 3. Фиксируем аудит перед удалением самого объекта
     log_action(db, user_id=user.id, action="delete", entity_type="test", entity_id=test_id)
+    
+    # 4. Удаляем сам тест (версии, вопросы и шкалы удалятся каскадно)
+    db.delete(test)
     db.commit()
+    return {"ok": True}
+
+
+@app.delete("/api/sequences/{sequence_id}", tags=["sequences"])
+def delete_sequence(
+    sequence_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_permission("sequences.edit")),
+):
+    """Удалить последовательность тестов."""
+    sequence = db.get(TestSequence, sequence_id)
+    if not sequence:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Последовательность не найдена")
+
+    # 1. Отвязываем попытки от этой последовательности (чтобы сохранить сами попытки и ответы студентов)
+    db.query(models.Attempt).filter(models.Attempt.sequence_id == sequence_id).update(
+        {"sequence_id": None}, synchronize_session=False
+    )
+
+    # 2. Удаляем прогресс пользователей по этой последовательности
+    db.query(models.UserTestProgress).filter(models.UserTestProgress.sequence_id == sequence_id).delete(synchronize_session=False)
+
+    # 3. Удаляем сами назначения
+    db.query(models.UserSequence).filter(models.UserSequence.sequence_id == sequence_id).delete(synchronize_session=False)
+
+    # 4. Логируем и удаляем саму последовательность (связанные sequence_items удалятся каскадно)
+    log_action(db, user_id=user.id, action="delete", entity_type="test_sequence", entity_id=sequence_id)
+    db.delete(sequence)
+    db.commit()
+
+    return {"ok": True}
+
+
+@app.delete("/api/versions/{version_id}", tags=["versions"])
+def delete_version(
+    version_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_permission("tests.edit")),
+):
+    """Удалить черновую версию теста."""
+    version = _get_version_or_404(db, version_id)
+    
+    if version.is_published:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="Нельзя удалить опубликованную версию"
+        )
+        
+    if version.attempts:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="Нельзя удалить версию, по которой уже есть попытки прохождения"
+        )
+
+    # При удалении версии каскадно удалятся все её вопросы, шкалы и ключи
+    db.delete(version)
+    log_action(db, user_id=user.id, action="delete", entity_type="test_version", entity_id=version_id)
+    db.commit()
+    
     return {"ok": True}
 
 
@@ -1177,8 +1239,7 @@ def _sync_question_options(
                 option.text = opt_in.text
             if opt_in.raw_value is not None:
                 option.raw_value = opt_in.raw_value
-            if opt_in.is_correct is not None:
-                option.is_correct = opt_in.is_correct
+            option.is_correct = opt_in.is_correct
             option.order_num = order_num
         else:
             if not opt_in.text:
@@ -1284,7 +1345,6 @@ def create_version(
         test_id=test.id,
         version_no=version_no,
         instruction=payload.instruction,
-        comment=payload.comment,
         created_by=user.id,
     )
     db.add(version)
@@ -1324,7 +1384,6 @@ def create_version(
         details={
             "test_id": test.id,
             "version_no": version.version_no,
-            "comment": payload.comment,
             "copied_from": payload.copy_from_version_id,
             "published": version.is_published,
         },
@@ -1645,8 +1704,21 @@ def delete_question(
     question = db.get(Question, question_id)
     if not question:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Вопрос не найден")
-    db.delete(question)
+
+    # 1. Находим все ответы студентов на этот конкретный вопрос
+    answers = db.query(models.AttemptAnswer).filter(models.AttemptAnswer.question_id == question_id).all()
+    answer_ids = [a.id for a in answers]
+
+    if answer_ids:
+        # Удаляем экспертные оценки и выбранные опции для этих ответов
+        	db.query(models.ManualAnswerScore).filter(models.ManualAnswerScore.attempt_answer_id.in_(answer_ids)).delete(synchronize_session=False)
+        	db.query(models.AttemptAnswerOption).filter(models.AttemptAnswerOption.attempt_answer_id.in_(answer_ids)).delete(synchronize_session=False)
+        # Удаляем сами записи ответов попыток
+        	db.query(models.AttemptAnswer).filter(models.AttemptAnswer.id.in_(answer_ids)).delete(synchronize_session=False)
+
+    # 2. Логируем и удаляем вопрос (варианты answer_options и их scores удалятся каскадно)
     log_action(db, user_id=user.id, action="delete", entity_type="question", entity_id=question_id)
+    db.delete(question)
     db.commit()
     return {"ok": True}
 
@@ -1702,7 +1774,7 @@ def assign_sequence(
     created = []
     for uid in payload.user_ids:
         target = db.get(User, uid)
-        if not target or not target.has_role(ROLE_STUDENT):
+        if not target:
             continue
         existing = (
             db.query(UserSequence)
@@ -1868,7 +1940,7 @@ def save_answers(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    """Сохранить (upsert) ответы попытки; при finish=True — завершить и посчитать результат."""
+    """Сохранить ответы попытки; при finish=True — проверить обязательные, завершить и посчитать результат."""
     attempt = db.get(Attempt, attempt_id)
     if not attempt:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Попытка не найдена")
@@ -1885,15 +1957,11 @@ def save_answers(
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail=f"Вопрос {ans.question_id} не из этой версии")
 
-        record = (
-            db.query(AttemptAnswer)
-            .filter(AttemptAnswer.attempt_id == attempt.id, AttemptAnswer.question_id == question.id)
-            .first()
-        )
+        # Ищем ответ в уже загруженной коллекции attempt.answers (избегаем рассинхрона памяти и БД)
+        record = next((a for a in attempt.answers if a.question_id == question.id), None)
         if not record:
-            record = AttemptAnswer(attempt_id=attempt.id, question_id=question.id)
-            db.add(record)
-            db.flush()
+            record = AttemptAnswer(question_id=question.id)
+            attempt.answers.append(record)  # Добавляем в коллекцию ORM, а не просто в БД
 
         if question.is_open_text:
             record.answer_text = ans.text
@@ -1902,24 +1970,38 @@ def save_answers(
             invalid = set(ans.option_ids) - valid_option_ids
             if invalid:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                    detail=f"Недопустимые варианты для вопроса {question.id}: {sorted(invalid)}")
-            # Полная замена выбранных вариантов.
-            for link in list(record.selected_options):
-                db.delete(link)
-            db.flush()
-            # single_choice/scale — не более одного варианта.
+                                    detail=f"Недопустимые варианты для вопроса {question.id}")
+            
+            # Полная замена через метод коллекции (старые удалятся каскадно)
+            record.selected_options.clear()
             option_ids = ans.option_ids[:1] if not question.is_multi else ans.option_ids
+            
             for oid in option_ids:
-                db.add(AttemptAnswerOption(attempt_answer_id=record.id, option_id=oid))
+                record.selected_options.append(AttemptAnswerOption(option_id=oid))
 
     db.flush()
 
+    # --- ПРОВЕРКА ОБЯЗАТЕЛЬНЫХ ВОПРОСОВ ПЕРЕД ЗАВЕРШЕНИЕМ ---
     if payload.finish:
+        answered_qids = set()
+        for a in attempt.answers:
+            if a.answer_text or a.selected_options:
+                answered_qids.add(a.question_id)
+        
+        required_qids = {q.id for q in attempt.version.questions if q.is_required}
+        missing = required_qids - answered_qids
+        if missing:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="Вы ответили не на все обязательные вопросы. Пожалуйста, заполните их."
+            )
+
         _finalize_attempt(db, attempt, user)
 
     log_action(db, user_id=user.id, action="save_answers", entity_type="attempt", entity_id=attempt.id,
                details={"count": len(payload.answers), "finished": payload.finish})
     db.commit()
+    
     return {
         "ok": True,
         "attempt": attempt_to_dict(attempt, with_answers=True),
@@ -2425,6 +2507,7 @@ def page_assignments(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/student", tags=["pages"], include_in_schema=False)
 def page_student(request: Request, db: Session = Depends(get_db)):
+    """Кабинет студента: назначения и доступные тесты."""
     user = _session_user(request, db)
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
@@ -2434,14 +2517,16 @@ def page_student(request: Request, db: Session = Depends(get_db)):
         .order_by(UserSequence.assigned_at.desc())
         .all()
     )
-
+    tests = db.query(Test).filter(Test.is_active.is_(True)).order_by(Test.title).all()
     return render(
         request,
         "student.html",
         user=user,
         active="student",
         assignments=assignments,
+        tests=tests,
     )
+
 
 @app.get("/attempt/{attempt_id}", tags=["pages"], include_in_schema=False)
 def page_attempt(attempt_id: int, request: Request, db: Session = Depends(get_db)):

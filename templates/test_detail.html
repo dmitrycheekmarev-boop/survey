@@ -54,6 +54,7 @@
                     <a href="/tests/{{ test.id }}/edit?version_id={{ v.id }}" class="text-gray-600 hover:underline">Редактировать</a>
                     {% if not v.is_published %}
                     <button onclick="publishVersion({{ v.id }})" class="text-blue-600 hover:underline">Опубликовать</button>
+      		    <button onclick="deleteVersion({{ v.id }}, {{ v.version_no }})" class="text-red-600 hover:underline">Удалить</button>
                     {% endif %}
                 </td>
             </tr>
@@ -86,5 +87,19 @@ async function publishVersion(versionId) {
         location.reload();
     } catch (e) { toast(e.message, 'error'); }
 }
+
+async function deleteVersion(versionId, versionNo) {
+    if (!confirm('Вы уверены, что хотите удалить черновик версии v' + versionNo + '? Все вопросы и шкалы этой версии будут удалены.')) {
+        return;
+    }
+    try {
+        await api('DELETE', '/api/versions/' + versionId);
+        toast('Черновик успешно удален', 'success');
+        setTimeout(function() { location.reload(); }, 600);
+    } catch (e) { 
+        toast(e.message, 'error'); 
+    }
+}
+
 </script>
 {% endblock %}

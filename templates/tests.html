@@ -45,6 +45,7 @@
                 <td class="px-4 py-3 text-right space-x-2">
                     <a href="/tests/{{ test.id }}" class="text-blue-600 hover:underline">Открыть</a>
                     <a href="/tests/{{ test.id }}/edit" class="text-gray-600 hover:underline">Редактор</a>
+		    <button onclick="deleteTest({{ test.id }}, '{{ test.title|e }}')" class="text-red-600 hover:underline">Удалить</button>
                 </td>
             </tr>
             {% else %}
@@ -88,5 +89,19 @@ async function createTest() {
         location.href = '/tests/' + test.id;
     } catch (e) { toast(e.message, 'error'); }
 }
+async function deleteTest(id, title) {
+    if (!confirm('Вы уверены, что хотите удалить тест "' + title + '"? Все версии, вопросы и пройденные попытки студентов будут удалены безвозвратно.')) {
+        return;
+    }
+    try {
+        await api('DELETE', '/api/tests/' + id);
+        toast('Тест успешно удален', 'success');
+        // Перезагружаем страницу, чтобы обновить список
+        setTimeout(function() { location.reload(); }, 600);
+    } catch (e) {
+        toast(e.message, 'error');
+    }
+}
 </script>
+
 {% endblock %}

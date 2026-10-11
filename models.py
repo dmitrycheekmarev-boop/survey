@@ -395,7 +395,6 @@ class TestVersion(Base):
     test_id = Column(BIGINT, fk("tests.id", "CASCADE"), nullable=False)
     version_no = Column(Integer, nullable=False)
     instruction = Column(Text, nullable=True)                     # инструкция для студента
-    comment = Column(Text, nullable=True)                         # комментарий/причина изменения версии
     is_published = Column(Boolean, nullable=False, default=False)
     created_by = Column(BIGINT, fk("users.id"), nullable=False)
     created_at = Column(DateTime, nullable=False, default=utcnow, server_default=func.now())

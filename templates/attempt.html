@@ -18,7 +18,7 @@
 
 <form id="attempt-form">
     {% for q in attempt.version.questions %}
-    <div class="card p-5 mb-4">
+    <div class="card p-5 mb-4 question-card" data-qid="{{ q.id }}" data-required="{{ 'true' if q.is_required else 'false' }}">
         <div class="font-medium text-gray-900 mb-3">
             {{ q.order_num }}. {{ q.text }}
             {% if q.is_required %}<span class="text-red-500">*</span>{% endif %}
@@ -79,9 +79,31 @@ function collectAnswers() {
 if (!IS_FINISHED) {
     document.getElementById('attempt-form').addEventListener('submit', async function (e) {
         e.preventDefault();
+        
+        // --- КЛИЕНТСКАЯ ВАЛИДАЦИЯ ---
+        let hasMissing = false;
+        document.querySelectorAll('.question-card[data-required="true"]').forEach(function(card) {
+            const hasChecked = card.querySelector('.ans-opt:checked');
+            const hasText = card.querySelector('.ans-text');
+            
+            if (!hasChecked && (!hasText || !hasText.value.trim())) {
+                hasMissing = true;
+                card.classList.add('border-red-400', 'border-2'); // Подсветка пропущенного вопроса
+            } else {
+                card.classList.remove('border-red-400', 'border-2');
+            }
+        });
+
+        if (hasMissing) {
+            toast('Пожалуйста, ответьте на все обязательные вопросы (выделены красным)', 'error');
+            return; // Прерываем отправку
+        }
+        // ----------------------------
+
         const btn = document.getElementById('finish-btn');
         btn.disabled = true;
         btn.textContent = 'Сохранение...';
+        
         try {
             await api('POST', '/api/attempts/' + ATTEMPT_ID + '/answers', {
                 answers: collectAnswers(),
@@ -103,5 +125,6 @@ async function abortAttempt() {
         location.href = '/student';
     } catch (e) { toast(e.message, 'error'); }
 }
+
 </script>
 {% endblock %}

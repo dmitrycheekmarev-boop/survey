@@ -33,8 +33,9 @@
                         {% endfor %}
                     </ol>
                 </td>
-                <td class="px-4 py-3 text-right">
+                <td class="px-4 py-3 text-right space-x-3">
                     <button onclick="openAssignModal({{ s.id }}, '{{ s.title|e }}')" class="text-blue-600 hover:underline">Назначить студентам</button>
+                    <button onclick="deleteSequence({{ s.id }}, '{{ s.title|e }}')" class="text-red-600 hover:underline">Удалить</button>
                 </td>
             </tr>
             {% else %}
@@ -136,19 +137,23 @@ async function assignUsers(sequenceId) {
     if (!userIds.length) { toast('Выберите хотя бы одного студента', 'error'); return; }
     try {
         const res = await api('POST', '/api/sequences/' + sequenceId + '/assign', { user_ids: userIds });
-        const successCount = res.assigned_user_ids.length;
-        const requestedCount = userIds.length;
-
-        if (successCount === requestedCount) {
-            toast('Успешно назначено всем выбранным (' + successCount + ')', 'success');
-            closeModal();
-        } else if (successCount > 0) {
-            toast('Назначено частично: ' + successCount + ' из ' + requestedCount + '. Остальные пропущены (не студенты, неверный ID или тест уже назначен).', 'error');
-            closeModal();
-        } else {
-            toast('Никому не назначено. Проверьте ID или у них уже есть этот тест.', 'error');
-        }
+        toast('Назначено: ' + res.assigned_user_ids.length, 'success');
+        closeModal();
     } catch (e) { toast(e.message, 'error'); }
 }
+
+async function deleteSequence(id, title) {
+    if (!confirm('Вы уверены, что хотите удалить последовательность "' + title + '"? Все назначения студентам будут отменены, но их пройденные тесты сохранятся.')) {
+        return;
+    }
+    try {
+        await api('DELETE', '/api/sequences/' + id);
+        toast('Последовательность удалена', 'success');
+        setTimeout(function() { location.reload(); }, 600);
+    } catch (e) { 
+        toast(e.message, 'error'); 
+    }
+}
+
 </script>
 {% endblock %}
