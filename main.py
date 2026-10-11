@@ -886,20 +886,25 @@ def api_register(payload: RegisterRequest, db: Session = Depends(get_db)):
 
 @app.get("/api/tests", tags=["tests"])
 def list_tests(
-    db: Session = Depends(get_db),
-    user: User = Depends(get_current_user),
-    only_published: bool = False,
+        db: Session = Depends(get_db),
+        user: User = Depends(get_current_user),
+        only_published: bool = False,
 ):
-    """Список тестов. Студенты видят только опубликованные."""
     query = db.query(Test)
     staff = user.has_role(ROLE_ADMIN) or user.has_role(ROLE_METHODIST)
     if not staff:
         only_published = True
+
     if only_published:
         query = query.filter(Test.is_active.is_(True))
-    tests = query.order_by(Test.title).all()
-    return [test_to_dict(t) for t in tests]
 
+    tests = query.order_by(Test.title).all()
+
+    # Добавляем фильтрацию версий перед отправкой
+    if only_published:
+        tests = [t for t in tests if t.published_version is not None]
+
+    return [test_to_dict(t) for t in tests]
 
 @app.post("/api/tests", tags=["tests"], status_code=status.HTTP_201_CREATED)
 def create_test(
@@ -1697,7 +1702,7 @@ def assign_sequence(
     created = []
     for uid in payload.user_ids:
         target = db.get(User, uid)
-        if not target:
+        if not target or not target.has_role(ROLE_STUDENT):
             continue
         existing = (
             db.query(UserSequence)
@@ -2420,7 +2425,6 @@ def page_assignments(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/student", tags=["pages"], include_in_schema=False)
 def page_student(request: Request, db: Session = Depends(get_db)):
-    """Кабинет студента: назначения и доступные тесты."""
     user = _session_user(request, db)
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
@@ -2430,16 +2434,14 @@ def page_student(request: Request, db: Session = Depends(get_db)):
         .order_by(UserSequence.assigned_at.desc())
         .all()
     )
-    tests = db.query(Test).filter(Test.is_active.is_(True)).order_by(Test.title).all()
+
     return render(
         request,
         "student.html",
         user=user,
         active="student",
         assignments=assignments,
-        tests=tests,
     )
-
 
 @app.get("/attempt/{attempt_id}", tags=["pages"], include_in_schema=False)
 def page_attempt(attempt_id: int, request: Request, db: Session = Depends(get_db)):

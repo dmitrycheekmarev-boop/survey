@@ -136,8 +136,18 @@ async function assignUsers(sequenceId) {
     if (!userIds.length) { toast('Выберите хотя бы одного студента', 'error'); return; }
     try {
         const res = await api('POST', '/api/sequences/' + sequenceId + '/assign', { user_ids: userIds });
-        toast('Назначено: ' + res.assigned_user_ids.length, 'success');
-        closeModal();
+        const successCount = res.assigned_user_ids.length;
+        const requestedCount = userIds.length;
+
+        if (successCount === requestedCount) {
+            toast('Успешно назначено всем выбранным (' + successCount + ')', 'success');
+            closeModal();
+        } else if (successCount > 0) {
+            toast('Назначено частично: ' + successCount + ' из ' + requestedCount + '. Остальные пропущены (не студенты, неверный ID или тест уже назначен).', 'error');
+            closeModal();
+        } else {
+            toast('Никому не назначено. Проверьте ID или у них уже есть этот тест.', 'error');
+        }
     } catch (e) { toast(e.message, 'error'); }
 }
 </script>
