@@ -1,0 +1,982 @@
+[
+ {
+  "respondent": "demo_0001",
+  "test_code": "SJO",
+  "version": 1,
+  "submitted_at": "2026-09-01T10:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "SJO_q01",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q02",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q03",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q04",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q05",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q06",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q07",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q08",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q09",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q10",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q11",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q12",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q13",
+    "value": "RIGHT_1"
+   },
+   {
+    "question_code": "SJO_q14",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q15",
+    "value": "RIGHT_1"
+   },
+   {
+    "question_code": "SJO_q16",
+    "value": "BOTH"
+   },
+   {
+    "question_code": "SJO_q17",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q18",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q19",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q20",
+    "value": "LEFT_2"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "REAN_BADMAEV",
+  "version": 1,
+  "submitted_at": "2026-09-01T10:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "REAN_q01",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q02",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q03",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q04",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q05",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q06",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q07",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q08",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q09",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q10",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q11",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q12",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q13",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q14",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q15",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q16",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q17",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q18",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q19",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q20",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q21",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q22",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q23",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q24",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q25",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q26",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q27",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q28",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q29",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q30",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q31",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q32",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q33",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q34",
+    "value": "1"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "POAK",
+  "version": 1,
+  "submitted_at": "2026-09-01T10:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "POAK_q01",
+    "value": "4"
+   },
+   {
+    "question_code": "POAK_q02",
+    "value": "2"
+   },
+   {
+    "question_code": "POAK_q03",
+    "value": "4"
+   },
+   {
+    "question_code": "POAK_q04",
+    "value": "2"
+   },
+   {
+    "question_code": "POAK_q05",
+    "value": "4"
+   },
+   {
+    "question_code": "POAK_q06",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q07",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q08",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q09",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q10",
+    "value": "2"
+   },
+   {
+    "question_code": "POAK_q11",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q12",
+    "value": "1"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "SJO",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:07:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "SJO_q01",
+    "value": "RIGHT_3"
+   },
+   {
+    "question_code": "SJO_q02",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q03",
+    "value": "BOTH"
+   },
+   {
+    "question_code": "SJO_q04",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q05",
+    "value": "BOTH"
+   },
+   {
+    "question_code": "SJO_q06",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q07",
+    "value": "RIGHT_3"
+   },
+   {
+    "question_code": "SJO_q08",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q09",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q10",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q11",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q12",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q13",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q14",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q15",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q16",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q17",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q18",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q19",
+    "value": "RIGHT_1"
+   },
+   {
+    "question_code": "SJO_q20",
+    "value": "RIGHT_2"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "REAN_BADMAEV",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:07:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "REAN_q01",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q02",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q03",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q04",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q05",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q06",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q07",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q08",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q09",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q10",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q11",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q12",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q13",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q14",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q15",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q16",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q17",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q18",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q19",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q20",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q21",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q22",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q23",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q24",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q25",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q26",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q27",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q28",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q29",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q30",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q31",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q32",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q33",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q34",
+    "value": "5"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "POAK",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:07:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "POAK_q01",
+    "value": "3"
+   },
+   {
+    "question_code": "POAK_q02",
+    "value": "2"
+   },
+   {
+    "question_code": "POAK_q03",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q04",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q05",
+    "value": "4"
+   },
+   {
+    "question_code": "POAK_q06",
+    "value": "3"
+   },
+   {
+    "question_code": "POAK_q07",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q08",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q09",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q10",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q11",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q12",
+    "value": "3"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "KASS_COMM",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "KASS_q01",
+    "value": "B"
+   },
+   {
+    "question_code": "KASS_q02",
+    "value": "C"
+   },
+   {
+    "question_code": "KASS_q03",
+    "value": "C"
+   },
+   {
+    "question_code": "KASS_q04",
+    "value": "B"
+   },
+   {
+    "question_code": "KASS_q05",
+    "value": "A"
+   },
+   {
+    "question_code": "KASS_q06",
+    "value": "B"
+   },
+   {
+    "question_code": "KASS_q07",
+    "value": "D"
+   },
+   {
+    "question_code": "KASS_q08",
+    "value": "B"
+   },
+   {
+    "question_code": "KASS_q09",
+    "value": "A"
+   },
+   {
+    "question_code": "KASS_q10",
+    "value": "C"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "NEED_COGNITION",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "NFC_q01",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q02",
+    "value": "4"
+   },
+   {
+    "question_code": "NFC_q03",
+    "value": "4"
+   },
+   {
+    "question_code": "NFC_q04",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q05",
+    "value": "2"
+   },
+   {
+    "question_code": "NFC_q06",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q07",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q08",
+    "value": "4"
+   },
+   {
+    "question_code": "NFC_q09",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q10",
+    "value": "7"
+   },
+   {
+    "question_code": "NFC_q11",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q12",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q13",
+    "value": "2"
+   },
+   {
+    "question_code": "NFC_q14",
+    "value": "6"
+   },
+   {
+    "question_code": "NFC_q15",
+    "value": "6"
+   },
+   {
+    "question_code": "NFC_q16",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q17",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q18",
+    "value": "5"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "CT_q01",
+    "value": "ОТВЕТ: 1) Нет. 2) Если в тёмном, но сухом подвале листья тоже будут белыми, а в сыром, но светлом — зелёными. || ОБОСНОВАНИЕ: в задаче указаны две причины (темнота и сырость), а в выводе учтена только одна."
+   },
+   {
+    "question_code": "CT_q02",
+    "value": "ОТВЕТ: а) Да. || ОБОСНОВАНИЕ: не все писатели — переводчики, есть и не переводчики, и не владеющие иностранным языком."
+   },
+   {
+    "question_code": "CT_q03",
+    "value": "ОТВЕТ: Нет. || ОБОСНОВАНИЕ: некоторые деревья могут иметь, а могут не иметь красивые цветы, потому что деревья могут быть и не садовыми."
+   },
+   {
+    "question_code": "CT_q04",
+    "value": "ОТВЕТ: Нет. || ОБОСНОВАНИЕ: в обоих утверждениях говорится про некоторые объекты, значит, вывод неопределённый. Зайцы могут быть в лесу, а могут и не быть."
+   },
+   {
+    "question_code": "CT_q05",
+    "value": "ОТВЕТ: а) Самый светлый — Вова (если Коля темнее Сергея, значит Сергей светлее Коли, а Вова ещё светлее). б) Самый старший — Коля (Сергей младше Вовы, а Коля старше Вовы). в) Выше всех — Сергей (Вова ниже Коли, а Сергей выше Коли). || ОБОСНОВАНИЕ: а) Самый светлый — Вова (если Коля темнее Сергея, значит Сергей светлее Коли, а Вова ещё светлее). б) Самый старший — Коля (Сергей младше Вовы, а Коля старше Вовы). в) Выше всех — Сергей (Вова ниже Коли, а Сергей выше Коли)."
+   },
+   {
+    "question_code": "CT_q06",
+    "value": "ОТВЕТ: Волков занял место, отличное от Борисова и Григорьева, значит, Борисов и Григорьев заняли одинаковое место — второе, а Волков — первое. || ОБОСНОВАНИЕ: Волков занял место, отличное от Борисова и Григорьева, значит, Борисов и Григорьев заняли одинаковое место — второе, а Волков — первое."
+   },
+   {
+    "question_code": "CT_q07",
+    "value": "ОТВЕТ: а) От усиленного питания (при условии отсутствия движения). б) От движения (при условии отсутствия усиленного питания). в) От обоих вместе (при условии, что по отдельности ни одно не помогало). || ОБОСНОВАНИЕ: а) От усиленного питания (при условии отсутствия движения). б) От движения (при условии отсутствия усиленного питания). в) От обоих вместе (при условии, что по отдельности ни одно не помогало)."
+   },
+   {
+    "question_code": "CT_q08",
+    "value": "ОТВЕТ: Много разговаривали с соседями — это характеристика, общая у всех троих. || ОБОСНОВАНИЕ: Много разговаривали с соседями — это характеристика, общая у всех троих."
+   },
+   {
+    "question_code": "CT_q09",
+    "value": "ОТВЕТ: «Воет вьюга» — не относится к основной теме (как медведь ловит рыбу в промоине). || ОБОСНОВАНИЕ: «Воет вьюга» — не относится к основной теме (как медведь ловит рыбу в промоине)."
+   },
+   {
+    "question_code": "CT_q10",
+    "value": "ОТВЕТ: «Чайки тоже съедают рыбу на берегу» — не относится к основной теме текста «Пеликаны». || ОБОСНОВАНИЕ: «Чайки тоже съедают рыбу на берегу» — не относится к основной теме текста «Пеликаны»."
+   },
+   {
+    "question_code": "CT_q11",
+    "value": "ОТВЕТ: Да, последнее предложение («А кругом стоит тишина») противоположно по значению предпоследнему (дятел ударяет клювом — громкий стук). || ОБОСНОВАНИЕ: Да, последнее предложение («А кругом стоит тишина») противоположно по значению предпоследнему (дятел ударяет клювом — громкий стук)."
+   },
+   {
+    "question_code": "CT_q12",
+    "value": "ОТВЕТ: «Дул тихий ветерок» — предложение про ветерок, а основная тема текста — «гнездышко». || ОБОСНОВАНИЕ: «Дул тихий ветерок» — предложение про ветерок, а основная тема текста — «гнездышко»."
+   },
+   {
+    "question_code": "CT_q13",
+    "value": "ОТВЕТ: Нужно пояснить неизвестные выражения или попросить сделать это того, кто выдвинул тезис. Термины: экстраверт — общительный человек, непотизм — покровительство родственникам, феспианка — поклонница драматического искусства, целибат — безбрачие. || ОБОСНОВАНИЕ: Нужно пояснить неизвестные выражения или попросить сделать это того, кто выдвинул тезис. Термины: экстраверт — общительный человек, непотизм — покровительство родственникам, феспианка — поклонница драматического искусства, целибат — безбрачие."
+   },
+   {
+    "question_code": "CT_q14",
+    "value": "ОТВЕТ: Неясно, что считать «несовместимым с человеческим достоинством» и как понимать термины «жестокий», «бесчеловечный». Определить это не легче, чем решить, являются ли меры жестокими. || ОБОСНОВАНИЕ: Неясно, что считать «несовместимым с человеческим достоинством» и как понимать термины «жестокий», «бесчеловечный». Определить это не легче, чем решить, являются ли меры жестокими."
+   },
+   {
+    "question_code": "CT_q15",
+    "value": "ОТВЕТ: Водителя зовут так же, как и тебя, поскольку задача начинается со слов «Предположим, ты являешься водителем автобуса». Вся остальная информация — нерелевантна. || ОБОСНОВАНИЕ: Водителя зовут так же, как и тебя, поскольку задача начинается со слов «Предположим, ты являешься водителем автобуса». Вся остальная информация — нерелевантна."
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "KASS_COMM",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "KASS_q01",
+    "value": "B"
+   },
+   {
+    "question_code": "KASS_q02",
+    "value": "C"
+   },
+   {
+    "question_code": "KASS_q03",
+    "value": "A"
+   },
+   {
+    "question_code": "KASS_q04",
+    "value": "B"
+   },
+   {
+    "question_code": "KASS_q05",
+    "value": "A"
+   },
+   {
+    "question_code": "KASS_q06",
+    "value": "D"
+   },
+   {
+    "question_code": "KASS_q07",
+    "value": "D"
+   },
+   {
+    "question_code": "KASS_q08",
+    "value": "B"
+   },
+   {
+    "question_code": "KASS_q09",
+    "value": "A"
+   },
+   {
+    "question_code": "KASS_q10",
+    "value": "D"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "NEED_COGNITION",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "NFC_q01",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q02",
+    "value": "7"
+   },
+   {
+    "question_code": "NFC_q03",
+    "value": "6"
+   },
+   {
+    "question_code": "NFC_q04",
+    "value": "2"
+   },
+   {
+    "question_code": "NFC_q05",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q06",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q07",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q08",
+    "value": "6"
+   },
+   {
+    "question_code": "NFC_q09",
+    "value": "2"
+   },
+   {
+    "question_code": "NFC_q10",
+    "value": "3"
+   },
+   {
+    "question_code": "NFC_q11",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q12",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q13",
+    "value": "6"
+   },
+   {
+    "question_code": "NFC_q14",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q15",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q16",
+    "value": "1"
+   },
+   {
+    "question_code": "NFC_q17",
+    "value": "5"
+   },
+   {
+    "question_code": "NFC_q18",
+    "value": "2"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "CT_q01",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q02",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q03",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q04",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q05",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q06",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q07",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q08",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q09",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q10",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q11",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q12",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q13",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q14",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   },
+   {
+    "question_code": "CT_q15",
+    "value": "ОТВЕТ: не знаю || ОБОСНОВАНИЕ: "
+   }
+  ]
+ }
+]

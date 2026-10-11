@@ -1,0 +1,5892 @@
+{
+  "format_version": "1.0",
+  "author": {
+    "login": "alisova.a",
+    "full_name": "Алисова Арина Алексеевна",
+    "email": "arina@alisova.com",
+    "role": "methodist"
+  },
+  "tests": [
+    {
+      "code": "SJO",
+      "title": "Тест смысложизненных ориентаций (СЖО)",
+      "description": "Д. А. Леонтьев. 20 пар противоположных утверждений, ответ по шкале 3-2-1-0-1-2-3.",
+      "is_active": true,
+      "version": {
+        "version_no": 1,
+        "instruction": "Вам будут предложены пары противоположных утверждений. Ваша задача - выбрать одно из двух утверждений, которое, по Вашему мнению, больше соответствует действительности, и отметить одну из цифр 1, 2, 3, в зависимости от того насколько Вы уверены в выборе (или 0, если оба утверждения на Ваш взгляд одинаково верны).",
+        "is_published": true,
+        "scales": [
+          {
+            "code": "TOTAL",
+            "name": "Общий показатель осмысленности жизни (ОЖ)",
+            "scale_type": "sum",
+            "min_score": 20,
+            "max_score": 140,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "GOALS",
+            "name": "Цели в жизни",
+            "scale_type": "sum",
+            "min_score": 6,
+            "max_score": 42,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "PROCESS",
+            "name": "Процесс жизни",
+            "scale_type": "sum",
+            "min_score": 6,
+            "max_score": 42,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "RESULT",
+            "name": "Результативность жизни",
+            "scale_type": "sum",
+            "min_score": 5,
+            "max_score": 35,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "LOCUS_SELF",
+            "name": "Локус контроля - Я",
+            "scale_type": "sum",
+            "min_score": 4,
+            "max_score": 28,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "LOCUS_LIFE",
+            "name": "Локус контроля - жизнь",
+            "scale_type": "sum",
+            "min_score": 6,
+            "max_score": 42,
+            "description": null,
+            "interpretation": null
+          }
+        ],
+        "scale_dependencies": [],
+        "questions": [
+          {
+            "order_num": 1,
+            "code": "SJO_q01",
+            "text": "ЛЕВОЕ: Обычно мне очень скучно. || ПРАВОЕ: Обычно я полон энергии",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 2,
+            "code": "SJO_q02",
+            "text": "ЛЕВОЕ: Жизнь кажется мне всегда волнующей и захватывающей || ПРАВОЕ: Жизнь кажется мне совершенно спокойной и рутинной",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 3,
+            "code": "SJO_q03",
+            "text": "ЛЕВОЕ: В жизни я не имею определенных целей и намерений || ПРАВОЕ: В жизни я имею очень ясные цели и намерения",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 4,
+            "code": "SJO_q04",
+            "text": "ЛЕВОЕ: Моя жизнь представляется мне крайне бессмысленной и бесцельной || ПРАВОЕ: Моя жизнь представляется мне вполне осмысленной и целеустремленной.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 5,
+            "code": "SJO_q05",
+            "text": "ЛЕВОЕ: Каждый день кажется мне всегда новым и непохожим на другие || ПРАВОЕ: Каждый день кажется мне совершенно похожим на все другие.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 6,
+            "code": "SJO_q06",
+            "text": "ЛЕВОЕ: Когда я уйду на пенсию, я займусь интересными вещами, которыми всегда мечтал заняться || ПРАВОЕ: Когда я уйду на пенсию, я постараюсь не обременять себя никакими заботами.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 7,
+            "code": "SJO_q07",
+            "text": "ЛЕВОЕ: Моя жизнь сложилась именно так, как я мечтал || ПРАВОЕ: Моя жизнь сложилась совсем не так, как я мечтал.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 8,
+            "code": "SJO_q08",
+            "text": "ЛЕВОЕ: Я не добился успехов в осуществлении своих жизненных планов || ПРАВОЕ: Я осуществил многое из того, что было мною запланировано в жизни.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 9,
+            "code": "SJO_q09",
+            "text": "ЛЕВОЕ: Моя жизнь пуста и неинтересна. || ПРАВОЕ: Моя жизнь наполнена интересными делами",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "PROCESS",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 10,
+            "code": "SJO_q10",
+            "text": "ЛЕВОЕ: Если бы мне пришлось подводить сегодня итог моей жизни, то я бы сказал, что она была вполне осмысленной. || ПРАВОЕ: Если бы мне пришлось сегодня подводить итог моей жизни, то я бы сказал, что она не имела смысла",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 11,
+            "code": "SJO_q11",
+            "text": "ЛЕВОЕ: Если бы я мог выбирать, то я бы построил свою жизнь совершенно иначе. || ПРАВОЕ: Если бы я мог выбирать, то я бы прожил жизнь еще раз так же, как живу сейчас.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 12,
+            "code": "SJO_q12",
+            "text": "ЛЕВОЕ: Когда я смотрю на окружающий меня мир, он часто приводит меня в растерянность и беспокойство. || ПРАВОЕ: Когда я смотрю на окружающий меня мир, он совсем не вызывает у меня беспокойства и растерянности.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 13,
+            "code": "SJO_q13",
+            "text": "ЛЕВОЕ: Я человек очень обязательный. || ПРАВОЕ: Я человек совсем не обязательный.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 14,
+            "code": "SJO_q14",
+            "text": "ЛЕВОЕ: Я полагаю, что человек имеет возможность осуществить свой жизненный выбор по своему желанию. || ПРАВОЕ: Я полагаю, что человек лишен возможности выбирать из-за влияния природных способностей и обстоятельств.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 15,
+            "code": "SJO_q15",
+            "text": "ЛЕВОЕ: Я определенно могу назвать себя целеустремленным человеком. || ПРАВОЕ: Я не могу назвать себя целеустремленным человеком.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 16,
+            "code": "SJO_q16",
+            "text": "ЛЕВОЕ: В жизни я еще не нашел своего призвания и ясных целей. || ПРАВОЕ: В жизни я нашел свое призвание и цели.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 17,
+            "code": "SJO_q17",
+            "text": "ЛЕВОЕ: Мои жизненные взгляды еще не определились || ПРАВОЕ: Мои жизненные взгляды вполне определились.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 18,
+            "code": "SJO_q18",
+            "text": "ЛЕВОЕ: Я считаю, что мне удалось найти призвание и интересные цели в жизни. || ПРАВОЕ: Я едва ли способен найти призвание и интересные цели в жизни.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "GOALS",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 19,
+            "code": "SJO_q19",
+            "text": "ЛЕВОЕ: Моя жизнь в моих руках, и я сам управляю ею. || ПРАВОЕ: Моя жизнь не подвластна мне и она управляется внешними событиями.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_SELF",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "LOCUS_LIFE",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 20,
+            "code": "SJO_q20",
+            "text": "ЛЕВОЕ: Мои повседневные дела приносят мне удовольствие и удовлетворение || ПРАВОЕ: Мои повседневные дела приносят мне сплошные неприятности и переживания.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "Левое, 3",
+                "raw_value": "LEFT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 7
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 7
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "Левое, 2",
+                "raw_value": "LEFT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 6
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 6
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "Левое, 1",
+                "raw_value": "LEFT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 5
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 5
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "Оба равны (0)",
+                "raw_value": "BOTH",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "Правое, 1",
+                "raw_value": "RIGHT_1",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 6,
+                "text": "Правое, 2",
+                "raw_value": "RIGHT_2",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 7,
+                "text": "Правое, 3",
+                "raw_value": "RIGHT_3",
+                "scores": [
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "RESULT",
+                    "score": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "REAN_BADMAEV",
+      "title": "Мотивация учебной деятельности (Реан, Бадмаев)",
+      "description": "34 мотива учебной деятельности, оценка значимости от 1 до 5, 7 шкал (среднее по шкале).",
+      "is_active": true,
+      "version": {
+        "version_no": 1,
+        "instruction": "Оцените по 5-балльной системе приведенные мотивы учебной деятельности по значимости для Вас: 1 балл соответствует минимальной значимости мотива, 5 баллов – максимальной.",
+        "is_published": true,
+        "scales": [
+          {
+            "code": "COMM",
+            "name": "Коммуникативные мотивы",
+            "scale_type": "average",
+            "min_score": 1,
+            "max_score": 5,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "AVOID",
+            "name": "Мотивы избегания",
+            "scale_type": "average",
+            "min_score": 1,
+            "max_score": 5,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "PRESTIGE",
+            "name": "Мотивы престижа",
+            "scale_type": "average",
+            "min_score": 1,
+            "max_score": 5,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "PROF",
+            "name": "Профессиональные мотивы",
+            "scale_type": "average",
+            "min_score": 1,
+            "max_score": 5,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "CREATIVE",
+            "name": "Мотивы творческой самореализации",
+            "scale_type": "average",
+            "min_score": 1,
+            "max_score": 5,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "COGNITIVE",
+            "name": "Учебно-познавательные мотивы",
+            "scale_type": "average",
+            "min_score": 1,
+            "max_score": 5,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "SOCIAL",
+            "name": "Социальные мотивы",
+            "scale_type": "average",
+            "min_score": 1,
+            "max_score": 5,
+            "description": null,
+            "interpretation": null
+          }
+        ],
+        "scale_dependencies": [],
+        "questions": [
+          {
+            "order_num": 1,
+            "code": "REAN_q01",
+            "text": "Учусь, потому что мне нравится избранная профессия.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 2,
+            "code": "REAN_q02",
+            "text": "Чтобы обеспечить успешность будущей профессиональной деятельности.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 3,
+            "code": "REAN_q03",
+            "text": "Хочу стать специалистом.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 4,
+            "code": "REAN_q04",
+            "text": "Чтобы дать ответы на актуальные вопросы, относящиеся к сфере будущей профессиональной деятельности.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 5,
+            "code": "REAN_q05",
+            "text": "Хочу в полной мере использовать имеющиеся у меня задатки, способности и склонности к выбранной профессии.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 6,
+            "code": "REAN_q06",
+            "text": "Чтобы не отставать от друзей.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 7,
+            "code": "REAN_q07",
+            "text": "Чтобы работать с людьми, надо иметь глубокие и всесторонние знания.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 8,
+            "code": "REAN_q08",
+            "text": "Потому что хочу быть в числе лучших студентов.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 9,
+            "code": "REAN_q09",
+            "text": "Потому что хочу, чтобы наша учебная группа стала лучшей в колледже.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 10,
+            "code": "REAN_q10",
+            "text": "Чтобы заводить знакомства и общаться с интересными людьми.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 11,
+            "code": "REAN_q11",
+            "text": "Потому что полученные знания позволят мне добиться всего необходимого.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 12,
+            "code": "REAN_q12",
+            "text": "Необходимо окончить колледж, чтобы у знакомых не изменилось мнение обо мне, как способном, перспективном человеке.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 13,
+            "code": "REAN_q13",
+            "text": "Чтобы избежать осуждения и наказания за плохую учебу.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 14,
+            "code": "REAN_q14",
+            "text": "Хочу быть уважаемым человеком учебного коллектива.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 15,
+            "code": "REAN_q15",
+            "text": "Не хочу отставать от сокурсников, не желаю оказаться среди отстающих.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 16,
+            "code": "REAN_q16",
+            "text": "Потому что от успехов в учебе зависит уровень моей материальной обеспеченности в будущем.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 17,
+            "code": "REAN_q17",
+            "text": "Успешно учиться, сдавать экзамены на «4» и «5».",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 18,
+            "code": "REAN_q18",
+            "text": "Просто нравится учиться.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 19,
+            "code": "REAN_q19",
+            "text": "Попав в колледж, вынужден учиться, чтобы окончить его.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "AVOID",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 20,
+            "code": "REAN_q20",
+            "text": "Быть постоянно готовым к очередным занятиям.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 21,
+            "code": "REAN_q21",
+            "text": "Успешно продолжить обучение на последующих курсах, чтобы дать ответы на конкретные учебные вопросы.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 22,
+            "code": "REAN_q22",
+            "text": "Чтобы приобрести глубокие и прочные знания.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 23,
+            "code": "REAN_q23",
+            "text": "Потому что в будущем думаю заняться научной деятельностью по специальности.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 24,
+            "code": "REAN_q24",
+            "text": "Любые знания пригодятся в будущей профессии.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COGNITIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 25,
+            "code": "REAN_q25",
+            "text": "Потому что хочу принести больше пользы обществу.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 26,
+            "code": "REAN_q26",
+            "text": "Стать высококвалифицированным специалистом.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PROF",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 27,
+            "code": "REAN_q27",
+            "text": "Чтобы узнавать новое, заниматься творческой деятельностью.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 28,
+            "code": "REAN_q28",
+            "text": "Чтобы дать ответы на проблемы развития общества, жизнедеятельности людей.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "CREATIVE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 29,
+            "code": "REAN_q29",
+            "text": "Быть на хорошем счету у преподавателей.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 30,
+            "code": "REAN_q30",
+            "text": "Добиться одобрения родителей и окружающих.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 31,
+            "code": "REAN_q31",
+            "text": "Учусь ради исполнения долга перед родителями, школой.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 32,
+            "code": "REAN_q32",
+            "text": "Потому что знания придают мне уверенность в себе.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "COMM",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 33,
+            "code": "REAN_q33",
+            "text": "Потому что от успехов в учебе зависит мое будущее служебное положение.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "SOCIAL",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 34,
+            "code": "REAN_q34",
+            "text": "Хочу получить диплом с хорошими оценками, чтобы иметь преимущество перед другими.",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "1",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "2",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "3",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "4",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 4
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "5",
+                "raw_value": "5",
+                "scores": [
+                  {
+                    "scale_code": "PRESTIGE",
+                    "score": 5
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "POAK",
+      "title": "ПОАК",
+      "description": "12 вопросов о частоте (никогда - всегда), баллы 0-4, три шкалы и интегральный показатель.",
+      "is_active": true,
+      "version": {
+        "version_no": 1,
+        "instruction": "Пожалуйста, при ответе на вопросы выберите один из предлагаемых ответов в пустых колонках.",
+        "is_published": true,
+        "scales": [
+          {
+            "code": "HARM",
+            "name": "Нанесение вреда",
+            "scale_type": "sum",
+            "min_score": 0,
+            "max_score": 24,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "LIES",
+            "name": "Ложь",
+            "scale_type": "sum",
+            "min_score": 0,
+            "max_score": 16,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "JOKES",
+            "name": "Злые шутки",
+            "scale_type": "sum",
+            "min_score": 0,
+            "max_score": 12,
+            "description": null,
+            "interpretation": null
+          },
+          {
+            "code": "TOTAL",
+            "name": "Интегральный показатель антисоциальной креативности",
+            "scale_type": "sum",
+            "min_score": 0,
+            "max_score": 48,
+            "description": null,
+            "interpretation": null
+          }
+        ],
+        "scale_dependencies": [],
+        "questions": [
+          {
+            "order_num": 1,
+            "code": "POAK_q01",
+            "text": "Как часто Вы думаете о том, чтобы отомстить своим обидчикам?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 2,
+            "code": "POAK_q02",
+            "text": "Как часто у вас возникают идеи относительно новых способов наказания тех людей, которые этого заслуживают?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 3,
+            "code": "POAK_q03",
+            "text": "Как часто у вас возникают идеи о том, как избавиться от тех, кто мешает осуществлению ваших планов?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 4,
+            "code": "POAK_q04",
+            "text": "Как часто вы наносите вред кому-то новым, оригинальным способом?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 5,
+            "code": "POAK_q05",
+            "text": "Как часто у вас появляются мысли о новых способах причинения вреда другим в этом грубом, жестоком мире?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 6,
+            "code": "POAK_q06",
+            "text": "Как часто вы обманываете других для того, чтобы решить проблемную ситуацию?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "HARM",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 7,
+            "code": "POAK_q07",
+            "text": "Как часто вы придумываете отговорки, чтобы оправдать собственные поступки?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 8,
+            "code": "POAK_q08",
+            "text": "Как часто у вас появляется беспокойство, что при обмане кого-либо ваша ложь может быть раскрыта?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 9,
+            "code": "POAK_q09",
+            "text": "Как часто вы думаете о том, чтобы скрыть неблаговидные поступки от окружающих?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 10,
+            "code": "POAK_q10",
+            "text": "Как часто у вас возникают мысли зло пошутить?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 11,
+            "code": "POAK_q11",
+            "text": "Как часто вы пытаетесь злыми шутками отомстить другим?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "JOKES",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "order_num": 12,
+            "code": "POAK_q12",
+            "text": "Как часто у вас возникают идеи нарушить правила, когда общепринятые способы не работают?",
+            "question_type": "scale",
+            "is_required": true,
+            "options": [
+              {
+                "order_num": 1,
+                "text": "никогда",
+                "raw_value": "0",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "JOKES",
+                    "score": 0
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "order_num": 2,
+                "text": "редко",
+                "raw_value": "1",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "JOKES",
+                    "score": 1
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 1
+                  }
+                ]
+              },
+              {
+                "order_num": 3,
+                "text": "иногда",
+                "raw_value": "2",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "JOKES",
+                    "score": 2
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 2
+                  }
+                ]
+              },
+              {
+                "order_num": 4,
+                "text": "часто",
+                "raw_value": "3",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "JOKES",
+                    "score": 3
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 3
+                  }
+                ]
+              },
+              {
+                "order_num": 5,
+                "text": "всегда",
+                "raw_value": "4",
+                "scores": [
+                  {
+                    "scale_code": "LIES",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "JOKES",
+                    "score": 4
+                  },
+                  {
+                    "scale_code": "TOTAL",
+                    "score": 4
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

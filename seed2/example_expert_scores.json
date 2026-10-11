@@ -1,0 +1,302 @@
+[
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q01",
+  "scale_code": "CAUSES",
+  "expert": "alisova.a",
+  "score": 4
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q02",
+  "scale_code": "INFERENCE",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q03",
+  "scale_code": "INFERENCE",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q04",
+  "scale_code": "INFERENCE",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q05",
+  "scale_code": "SEQUENCE",
+  "expert": "alisova.a",
+  "score": 9
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q06",
+  "scale_code": "SEQUENCE",
+  "expert": "alisova.a",
+  "score": 2
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q07",
+  "scale_code": "CAUSES",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q08",
+  "scale_code": "CAUSES",
+  "expert": "alisova.a",
+  "score": 1
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q09",
+  "scale_code": "TEXTS",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q10",
+  "scale_code": "TEXTS",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q11",
+  "scale_code": "TEXTS",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q12",
+  "scale_code": "TEXTS",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q13",
+  "scale_code": "TERMS",
+  "expert": "alisova.a",
+  "score": 2
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q14",
+  "scale_code": "TERMS",
+  "expert": "alisova.a",
+  "score": 3
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:00:00Z",
+  "question_code": "CT_q15",
+  "scale_code": "RELEVANCE",
+  "expert": "alisova.a",
+  "score": 1
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q01",
+  "scale_code": "CAUSES",
+  "expert": "alisova.a",
+  "score": 0
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q02",
+  "scale_code": "INFERENCE",
+  "expert": "alisova.a",
+  "score": 1
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q03",
+  "scale_code": "INFERENCE",
+  "expert": "alisova.a",
+  "score": 0
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q04",
+  "scale_code": "INFERENCE",
+  "expert": "alisova.a",
+  "score": 1
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q05",
+  "scale_code": "SEQUENCE",
+  "expert": "alisova.a",
+  "score": 0
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q06",
+  "scale_code": "SEQUENCE",
+  "expert": "alisova.a",
+  "score": 1
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q07",
+  "scale_code": "CAUSES",
+  "expert": "alisova.a",
+  "score": 0
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q08",
+  "scale_code": "CAUSES",
+  "expert": "alisova.a",
+  "score": 0
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q09",
+  "scale_code": "TEXTS",
+  "expert": "alisova.a",
+  "score": 0
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q10",
+  "scale_code": "TEXTS",
+  "expert": "alisova.a",
+  "score": 1
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q11",
+  "scale_code": "TEXTS",
+  "expert": "alisova.a",
+  "score": 0
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q12",
+  "scale_code": "TEXTS",
+  "expert": "alisova.a",
+  "score": 1
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q13",
+  "scale_code": "TERMS",
+  "expert": "alisova.a",
+  "score": 0
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q14",
+  "scale_code": "TERMS",
+  "expert": "alisova.a",
+  "score": 1
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "CRIT_THINKING",
+  "version": 1,
+  "submitted_at": "2026-09-03T12:00:00Z",
+  "question_code": "CT_q15",
+  "scale_code": "RELEVANCE",
+  "expert": "alisova.a",
+  "score": 0
+ }
+]

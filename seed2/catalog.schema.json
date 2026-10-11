@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "catalog.schema.json",
+  "title": "Каталог тестов",
+  "type": "object",
+  "required": ["format_version", "author", "tests"],
+  "additionalProperties": false,
+  "properties": {
+    "format_version": { "const": "1.0" },
+    "author": {
+      "type": "object",
+      "required": ["login", "full_name", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "login": { "type": "string", "maxLength": 100 },
+        "full_name": { "type": "string", "maxLength": 200 },
+        "email": { "type": ["string", "null"], "maxLength": 255 },
+        "role": { "type": "string" }
+      }
+    },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/test" }
+    }
+  },
+  "$defs": {
+    "test": {
+      "type": "object",
+      "required": ["code", "title", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string", "maxLength": 50 },
+        "title": { "type": "string", "maxLength": 255 },
+        "description": { "type": ["string", "null"] },
+        "is_active": { "type": "boolean", "default": true },
+        "version": { "$ref": "#/$defs/version" }
+      }
+    },
+    "version": {
+      "type": "object",
+      "required": ["version_no", "scales", "questions"],
+      "additionalProperties": false,
+      "properties": {
+        "version_no": { "type": "integer", "minimum": 1 },
+        "instruction": { "type": ["string", "null"] },
+        "is_published": { "type": "boolean" },
+        "scales": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/scale" } },
+        "scale_dependencies": { "type": "array", "items": { "$ref": "#/$defs/dependency" } },
+        "questions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/question" } }
+      }
+    },
+    "scale": {
+      "type": "object",
+      "required": ["code", "name", "scale_type"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string", "maxLength": 50 },
+        "name": { "type": "string", "maxLength": 200 },
+        "description": { "type": ["string", "null"] },
+        "scale_type": { "enum": ["sum", "average", "count", "composite"] },
+        "min_score": { "type": ["number", "null"] },
+        "max_score": { "type": ["number", "null"] },
+        "interpretation": { "type": ["string", "null"] }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "required": ["composite_scale_code", "component_scale_code"],
+      "additionalProperties": false,
+      "properties": {
+        "composite_scale_code": { "type": "string" },
+        "component_scale_code": { "type": "string" },
+        "coefficient": { "type": "number", "default": 1 },
+        "operation": { "enum": ["+", "-", "*", "/"], "default": "+" }
+      }
+    },
+    "question": {
+      "type": "object",
+      "required": ["order_num", "code", "text", "question_type", "options"],
+      "additionalProperties": false,
+      "properties": {
+        "order_num": { "type": "integer", "minimum": 1 },
+        "code": { "type": "string", "maxLength": 50 },
+        "text": { "type": "string" },
+        "question_type": { "enum": ["single_choice", "multi_choice", "scale", "open_text"] },
+        "is_required": { "type": "boolean", "default": true },
+        "options": { "type": "array", "items": { "$ref": "#/$defs/option" } }
+      }
+    },
+    "option": {
+      "type": "object",
+      "required": ["order_num", "text", "raw_value", "scores"],
+      "additionalProperties": false,
+      "properties": {
+        "order_num": { "type": "integer", "minimum": 1 },
+        "text": { "type": "string" },
+        "raw_value": { "type": ["string", "null"], "maxLength": 50 },
+        "is_correct": { "type": ["boolean", "null"] },
+        "scores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["scale_code", "score"],
+            "additionalProperties": false,
+            "properties": {
+              "scale_code": { "type": "string" },
+              "score": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

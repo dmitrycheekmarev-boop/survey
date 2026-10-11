@@ -1,43 +1,39 @@
 import os
-import sys
 import json
 import asyncio
 import logging
 import asyncpg
-import httpx
 import docx
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart, Command
-
-# Корректная установка event loop policy для Windows
-if sys.platform == 'win32':
-    try:
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    except Exception:
-        pass
+from google import genai
+from google.genai import types as genai_types
 
 logging.basicConfig(level=logging.INFO)
 load_dotenv()
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "pass")
 DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
 DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "survey_db")
+DB_NAME = os.getenv("DB_NAME", "postgres")
+
+# Инициализация клиента Google Gemini
+gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 db_pool = None
 
-# Словарь для хранения активных задач пользователей (user_id -> asyncio.Task)
 user_tasks = {}
 
 
-# Инициализация базы данных
+# --- БАЗА ДАННЫХ ---
+
 async def init_db():
     global db_pool
     try:
@@ -53,10 +49,7 @@ async def init_db():
         logging.error(f"Ошибка подключения к PostgreSQL: {e}")
 
 
-# --- РАБОТА С ИСТОРИЕЙ СООБЩЕНИЙ В БД ---
-
 async def save_chat_message(user_id: int, role: str, content: str):
-    """Сохраняет сообщение в таблицу chat_history."""
     if not db_pool:
         return
     try:
@@ -70,15 +63,10 @@ async def save_chat_message(user_id: int, role: str, content: str):
 
 
 async def load_chat_history(user_id: int, limit: int = 12) -> list:
-    """
-    Загружает последние `limit` сообщений пользователя из БД,
-    упорядоченные по хронологии, с обрезкой слишком длинных текстов.
-    """
     if not db_pool:
         return []
     try:
         async with db_pool.acquire() as conn:
-            # Берем последние limit сообщений, а затем разворачиваем их по возрастанию id
             query = """
                 SELECT role, content 
                 FROM (
@@ -95,20 +83,24 @@ async def load_chat_history(user_id: int, limit: int = 12) -> list:
             history = []
             for r in rows:
                 content = r["content"]
-                # ОБРЕЗКА: Если в истории лежит гигантский файл (например main.py),
-                # обрезаем его до 2500 символов, чтобы не забивать контекст OpenRouter
                 if len(content) > 2500:
                     content = content[:2500] + "\n... [часть содержимого обрезана для экономии контекста]"
-
-                history.append({"role": r["role"], "content": content})
+                
+                # Gemini принимает роли: 'user' и 'model'
+                role = "model" if r["role"] == "assistant" else "user"
+                history.append(genai_types.Content(
+                    role=role,
+                    parts=[genai_types.Part.from_text(text=content)]
+                ))
             return history
     except Exception as e:
         logging.error(f"Ошибка загрузки истории из БД: {e}")
         return []
 
+
 # --- ИНСТРУМЕНТЫ АГЕНТА ДЛЯ РАБОТЫ С ФАЙЛАМИ ---
 
-def tool_write_file(path: str, content: str) -> str:
+def write_file(path: str, content: str) -> str:
     """Создает или перезаписывает файл по указанному пути."""
     try:
         dirname = os.path.dirname(path)
@@ -121,7 +113,7 @@ def tool_write_file(path: str, content: str) -> str:
         return f"Ошибка записи в файл '{path}': {e}"
 
 
-def tool_read_file(path: str) -> str:
+def read_file(path: str) -> str:
     """Читает содержимое файла (.txt, .md, .py, .docx и др.)."""
     try:
         if not os.path.exists(path):
@@ -135,7 +127,7 @@ def tool_read_file(path: str) -> str:
         return f"Ошибка чтения файла '{path}': {e}"
 
 
-def tool_list_files(directory: str = ".") -> str:
+def list_files(directory: str = ".") -> str:
     """Возвращает список всех файлов в папке проекта."""
     ignore_dirs = {'.git', '__pycache__', 'venv', '.idea', '.vscode'}
     result = []
@@ -146,51 +138,6 @@ def tool_list_files(directory: str = ".") -> str:
     return "\n".join(result) if result else "Папка пуста."
 
 
-TOOLS = [
-    {
-        "type": "function",
-        "function": {
-            "name": "write_file",
-            "description": "Записывает или создает файл в проекте с указанным содержимым.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "path": {"type": "string", "description": "Относительный путь к файлу"},
-                    "content": {"type": "string", "description": "Полный текст файла"}
-                },
-                "required": ["path", "content"]
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "read_file",
-            "description": "Читает файл из проекта.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "path": {"type": "string", "description": "Путь к файлу"}
-                },
-                "required": ["path"]
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "list_files",
-            "description": "Возвращает список всех файлов проекта.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "directory": {"type": "string", "description": "Корневая директория"}
-                }
-            }
-        }
-    }
-]
-
 SYSTEM_PROMPT = """
 Ты — профессиональный Fullstack AI-агент и старший разработчик.
 Твоя главная задача — создавать веб-приложение (Конструктор опросников на FastAPI + SQLAlchemy/PostgreSQL + Jinja2 + Tailwind CSS) согласно архитектуре из ТЗ.
@@ -200,10 +147,12 @@ SYSTEM_PROMPT = """
 """
 
 
+# --- ХЭНДЛЕРЫ TELEGRAM ---
+
 @dp.message(CommandStart())
 async def start_cmd(message: types.Message):
     await message.answer(
-        "Привет! Я ИИ-агент разработчик. Я готов строить Fullstack-приложение прямо в этой папке.\n\n"
+        "Привет! Я ИИ-агент разработчик на базе Google Gemini. Я готов строить Fullstack-приложение прямо в этой папке.\n\n"
         "Для остановки текущего процесса генерации используй команду /cancel."
     )
 
@@ -218,6 +167,7 @@ async def cancel_handler(message: types.Message):
     else:
         await message.answer("Сейчас нет активных выполняющихся задач.")
 
+
 @dp.message(Command("clear"))
 async def clear_history_cmd(message: types.Message):
     user_id = message.from_user.id
@@ -225,6 +175,7 @@ async def clear_history_cmd(message: types.Message):
         async with db_pool.acquire() as conn:
             await conn.execute("DELETE FROM chat_history WHERE user_id = $1", user_id)
     await message.answer("🧹 История диалога и контекст успешно очищены!")
+
 
 @dp.message()
 async def agent_handle_message(message: types.Message):
@@ -234,7 +185,6 @@ async def agent_handle_message(message: types.Message):
         await message.answer("⚠️ Предыдущая задача еще выполняется! Для отмены отправь /cancel")
         return
 
-    # Запускаем фоновую задачу
     task = asyncio.create_task(run_agent_loop(message))
     user_tasks[user_id] = task
 
@@ -252,96 +202,86 @@ async def run_agent_loop(message: types.Message):
 
     status_msg = await message.answer("🧠 Анализирую задачу...\n*(для отмены отправь /cancel)*", parse_mode="Markdown")
 
-    # 1. Сохраняем запрос пользователя в БД
     await save_chat_message(user_id, "user", user_prompt)
+    contents = await load_chat_history(user_id, limit=12)
 
-    # 2. Загружаем сохранённую историю диалога (последние 10-12 сообщений)
-    chat_history = await load_chat_history(user_id, limit=12)
+    # Если в истории ещё нет текущего сообщения, добавляем его
+    if not contents or contents[-1].parts[0].text != user_prompt:
+        contents.append(genai_types.Content(
+            role="user",
+            parts=[genai_types.Part.from_text(text=user_prompt)]
+        ))
 
-    # 3. Собираем итоговый массив сообщений для OpenRouter
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}] + chat_history
+    available_tools = {
+        "write_file": write_file,
+        "read_file": read_file,
+        "list_files": list_files
+    }
 
-    async with httpx.AsyncClient(timeout=60.0) as client:  # Поставили таймаут 60 сек вместо 120
-        for step in range(6):  # Сократили кол-во шагов с 8 до 6, чтобы бот не уходил в бесконечные циклы
-            await asyncio.sleep(0)  # Точка проверки отмены
+    config = genai_types.GenerateContentConfig(
+        system_instruction=SYSTEM_PROMPT,
+        tools=[write_file, read_file, list_files]
+    )
 
-            payload = {
-                "model": "anthropic/claude-haiku-5.5",
-                "messages": messages,
-                "tools": TOOLS,
-                "tool_choice": "auto"
-            }
+    for step in range(6):
+        await asyncio.sleep(0)
 
-            headers = {
-                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                "Content-Type": "application/json"
-            }
+        try:
+            # Выполняем синхронный вызов SDK в отдельном потоке
+            response = await asyncio.to_thread(
+                gemini_client.models.generate_content,
+                model="gemini-flash-lite-latest",
+                contents=contents,
+                config=config
+            )
+        except Exception as e:
+            await status_msg.edit_text(f"❌ Ошибка Gemini API: {e}")
+            return
+
+        candidate = response.candidates[0]
+        contents.append(candidate.content)
+
+        # Проверяем, вызвала ли модель функции
+        function_calls = [part.function_call for part in candidate.content.parts if part.function_call]
+
+        if function_calls:
+            function_responses = []
+            for call in function_calls:
+                fn_name = call.name
+                fn_args = dict(call.args) if call.args else {}
+
+                arg_preview = fn_args.get("path") or fn_args.get("directory") or ""
+                try:
+                    await status_msg.edit_text(
+                        f"⚙️ Выполняю `{fn_name}`: `{arg_preview}`...\n*(для отмены отправь /cancel)*",
+                        parse_mode="Markdown"
+                    )
+                except Exception:
+                    pass
+
+                func = available_tools.get(fn_name)
+                result_str = str(func(**fn_args)) if func else f"Функция {fn_name} не найдена."
+
+                if len(result_str) > 3000:
+                    result_str = result_str[:3000] + "\n... [результат слишком длинный, часть вырезана]"
+
+                function_responses.append(
+                    genai_types.Part.from_function_response(
+                        name=fn_name,
+                        response={"result": result_str}
+                    )
+                )
+
+            contents.append(genai_types.Content(role="tool", parts=function_responses))
+        else:
+            final_text = response.text or "Завершено."
+            await save_chat_message(user_id, "assistant", final_text)
 
             try:
-                response = await client.post("https://openrouter.ai/api/v1/chat/completions", json=payload,
-                                             headers=headers)
-                res_data = response.json()
-            except Exception as req_err:
-                await status_msg.edit_text(f"❌ Ошибка сети или таймаут: {req_err}")
-                return
-
-            if "choices" not in res_data:
-                await status_msg.edit_text(f"❌ Ошибка API: {res_data}")
-                return
-
-            choice = res_data["choices"][0]["message"]
-            messages.append(choice)
-
-            if choice.get("tool_calls"):
-                for tool_call in choice["tool_calls"]:
-                    fn_name = tool_call["function"]["name"]
-                    fn_args = json.loads(tool_call["function"]["arguments"])
-
-                    file_path = fn_args.get("path") or fn_args.get("filepath") or fn_args.get(
-                        "file_path") or fn_args.get("file") or ""
-                    file_content = fn_args.get("content") or fn_args.get("text") or fn_args.get("code") or ""
-
-                    try:
-                        await status_msg.edit_text(
-                            f"⚙️ Выполняю `{fn_name}`: `{file_path}`...\n*(для отмены отправь /cancel)*",
-                            parse_mode="Markdown"
-                        )
-                    except Exception:
-                        pass
-
-                    tool_result = ""
-                    if fn_name == "write_file":
-                        tool_result = tool_write_file(file_path,
-                                                      file_content) if file_path else "Ошибка: не указан path"
-                    elif fn_name == "read_file":
-                        tool_result = tool_read_file(file_path) if file_path else "Ошибка: не указан path"
-                    elif fn_name == "list_files":
-                        directory = fn_args.get("directory") or file_path or "."
-                        tool_result = tool_list_files(directory)
-
-                    # Обрезаем ответ инструмента перед добавлением в контекст, чтобы не раздувать память
-                    if len(tool_result) > 3000:
-                        tool_result_for_context = tool_result[
-                                                  :3000] + "\n... [результат слишком длинный, часть вырезана]"
-                    else:
-                        tool_result_for_context = tool_result
-
-                    messages.append({
-                        "role": "tool",
-                        "tool_call_id": tool_call["id"],
-                        "content": tool_result_for_context
-                    })
-            else:
-                final_text = choice.get("content", "Завершено.")
-
-                # 4. Сохраняем финальный ответ бота в БД для следующих запросов
-                await save_chat_message(user_id, "assistant", final_text)
-
-                try:
-                    await status_msg.edit_text(final_text, parse_mode="Markdown")
-                except Exception:
-                    await status_msg.edit_text(final_text)
-                return
+                await status_msg.edit_text(final_text, parse_mode="Markdown")
+            except Exception:
+                await status_msg.edit_text(final_text)
+            return
 
 
 async def main():

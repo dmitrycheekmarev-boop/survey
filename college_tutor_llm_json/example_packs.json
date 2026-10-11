@@ -1,0 +1,584 @@
+[
+ {
+  "respondent": "demo_0001",
+  "test_code": "SJO",
+  "version": 1,
+  "submitted_at": "2026-09-01T10:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "SJO_q01",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q02",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q03",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q04",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q05",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q06",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q07",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q08",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q09",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q10",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q11",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q12",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q13",
+    "value": "RIGHT_1"
+   },
+   {
+    "question_code": "SJO_q14",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q15",
+    "value": "RIGHT_1"
+   },
+   {
+    "question_code": "SJO_q16",
+    "value": "BOTH"
+   },
+   {
+    "question_code": "SJO_q17",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q18",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q19",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q20",
+    "value": "LEFT_2"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "REAN_BADMAEV",
+  "version": 1,
+  "submitted_at": "2026-09-01T10:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "REAN_q01",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q02",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q03",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q04",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q05",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q06",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q07",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q08",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q09",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q10",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q11",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q12",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q13",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q14",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q15",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q16",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q17",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q18",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q19",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q20",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q21",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q22",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q23",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q24",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q25",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q26",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q27",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q28",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q29",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q30",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q31",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q32",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q33",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q34",
+    "value": "1"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0001",
+  "test_code": "POAK",
+  "version": 1,
+  "submitted_at": "2026-09-01T10:00:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "POAK_q01",
+    "value": "4"
+   },
+   {
+    "question_code": "POAK_q02",
+    "value": "2"
+   },
+   {
+    "question_code": "POAK_q03",
+    "value": "4"
+   },
+   {
+    "question_code": "POAK_q04",
+    "value": "2"
+   },
+   {
+    "question_code": "POAK_q05",
+    "value": "4"
+   },
+   {
+    "question_code": "POAK_q06",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q07",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q08",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q09",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q10",
+    "value": "2"
+   },
+   {
+    "question_code": "POAK_q11",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q12",
+    "value": "1"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "SJO",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:07:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "SJO_q01",
+    "value": "RIGHT_3"
+   },
+   {
+    "question_code": "SJO_q02",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q03",
+    "value": "BOTH"
+   },
+   {
+    "question_code": "SJO_q04",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q05",
+    "value": "BOTH"
+   },
+   {
+    "question_code": "SJO_q06",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q07",
+    "value": "RIGHT_3"
+   },
+   {
+    "question_code": "SJO_q08",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q09",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q10",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q11",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q12",
+    "value": "LEFT_2"
+   },
+   {
+    "question_code": "SJO_q13",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q14",
+    "value": "LEFT_1"
+   },
+   {
+    "question_code": "SJO_q15",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q16",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q17",
+    "value": "RIGHT_2"
+   },
+   {
+    "question_code": "SJO_q18",
+    "value": "LEFT_3"
+   },
+   {
+    "question_code": "SJO_q19",
+    "value": "RIGHT_1"
+   },
+   {
+    "question_code": "SJO_q20",
+    "value": "RIGHT_2"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "REAN_BADMAEV",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:07:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "REAN_q01",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q02",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q03",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q04",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q05",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q06",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q07",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q08",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q09",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q10",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q11",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q12",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q13",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q14",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q15",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q16",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q17",
+    "value": "1"
+   },
+   {
+    "question_code": "REAN_q18",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q19",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q20",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q21",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q22",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q23",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q24",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q25",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q26",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q27",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q28",
+    "value": "2"
+   },
+   {
+    "question_code": "REAN_q29",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q30",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q31",
+    "value": "3"
+   },
+   {
+    "question_code": "REAN_q32",
+    "value": "5"
+   },
+   {
+    "question_code": "REAN_q33",
+    "value": "4"
+   },
+   {
+    "question_code": "REAN_q34",
+    "value": "5"
+   }
+  ]
+ },
+ {
+  "respondent": "demo_0002",
+  "test_code": "POAK",
+  "version": 1,
+  "submitted_at": "2026-09-02T11:07:00Z",
+  "source": "synthetic",
+  "answers": [
+   {
+    "question_code": "POAK_q01",
+    "value": "3"
+   },
+   {
+    "question_code": "POAK_q02",
+    "value": "2"
+   },
+   {
+    "question_code": "POAK_q03",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q04",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q05",
+    "value": "4"
+   },
+   {
+    "question_code": "POAK_q06",
+    "value": "3"
+   },
+   {
+    "question_code": "POAK_q07",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q08",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q09",
+    "value": "0"
+   },
+   {
+    "question_code": "POAK_q10",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q11",
+    "value": "1"
+   },
+   {
+    "question_code": "POAK_q12",
+    "value": "3"
+   }
+  ]
+ }
+]

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "expert_scores.schema.json",
+  "title": "Оценки открытых ответов",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["respondent", "test_code", "question_code", "scale_code", "expert", "score"],
+    "additionalProperties": false,
+    "properties": {
+      "respondent": { "type": "string", "minLength": 1, "maxLength": 100 },
+      "test_code": { "type": "string" },
+      "version": { "type": "integer", "minimum": 1 },
+      "submitted_at": { "type": "string", "format": "date-time" },
+      "question_code": { "type": "string" },
+      "scale_code": { "type": "string" },
+      "expert": { "type": "string", "minLength": 1, "maxLength": 100 },
+      "score": { "type": "number", "minimum": 0 },
+      "comment": { "type": "string" }
+    }
+  }
+}

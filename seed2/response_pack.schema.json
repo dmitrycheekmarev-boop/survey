@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "response_pack.schema.json",
+  "title": "Пачка ответов",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["respondent", "test_code", "answers"],
+    "additionalProperties": false,
+    "properties": {
+      "respondent": { "type": "string", "minLength": 1, "maxLength": 100 },
+      "test_code": { "type": "string" },
+      "version": { "type": "integer", "minimum": 1 },
+      "submitted_at": { "type": "string", "format": "date-time" },
+      "source": { "type": "string" },
+      "answers": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": ["question_code", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "question_code": { "type": "string" },
+            "value": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
