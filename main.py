@@ -2333,7 +2333,7 @@ def my_statistics(db: Session = Depends(get_db), user: User = Depends(get_curren
 @app.get("/api/users", tags=["users"])
 def list_users(
     db: Session = Depends(get_db),
-    user: User = Depends(require_permission("users.manage")),
+    user: User = Depends(require_staff),  # Изменили эту строку
     role: Optional[str] = None,
 ):
     """Список пользователей (фильтр по роли)."""
@@ -2366,7 +2366,7 @@ def list_roles(
 @app.get("/api/audit", tags=["audit"])
 def list_audit(
     db: Session = Depends(get_db),
-    user: User = Depends(require_permission("audit.view")),
+    user: User = Depends(require_roles(ROLE_ADMIN)),
     limit: int = 100,
     action: Optional[str] = None,
     entity_type: Optional[str] = None,
@@ -2586,7 +2586,7 @@ def page_audit(request: Request, db: Session = Depends(get_db)):
     user = _session_user(request, db)
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
-    if not user.is_admin and not user.has_permission("audit.view"):
+    if not user.is_admin:  # Жесткая проверка на админа
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступно только администратору")
     logs = db.query(AuditLog).order_by(AuditLog.created_at.desc()).limit(200).all()
     return render(request, "audit.html", user=user, active="audit", logs=logs)
@@ -2600,3 +2600,45 @@ if __name__ == "__main__":  # pragma: no cover
     import uvicorn
 
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
+
+@app.get("/students", tags=["pages"], include_in_schema=False)
+def page_students(request: Request, db: Session = Depends(get_db)):
+    """Отдельная страница списка студентов для методиста."""
+    user = _session_user(request, db)
+    if not user:
+        return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    if not (user.is_admin or user.is_methodist):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступ запрещен")
+    
+    # Отдаем только студентов
+    students = [u for u in db.query(User).order_by(User.login).all() if u.has_role(ROLE_STUDENT)]
+    return render(request, "students.html", user=user, active="students", students=students)
+
+@app.get("/student_results", tags=["pages"], include_in_schema=False)
+def page_student_results(request: Request, db: Session = Depends(get_db)):
+    """Мои результаты (для студента)."""
+    user = _session_user(request, db)
+    if not user:
+        return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    
+    attempts = db.query(Attempt).filter(Attempt.user_id == user.id).order_by(Attempt.finished_at.desc()).all()
+    return render(request, "student_results.html", user=user, active="student_results", attempts=attempts)
+
+@app.get("/results", tags=["pages"], include_in_schema=False)
+def page_all_results(request: Request, db: Session = Depends(get_db)):
+    """Все результаты студентов (для методиста и админа)."""
+    user = _session_user(request, db)
+    if not user:
+        return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    if not (user.is_admin or user.is_methodist):
+        raise HTTPException(status_code=403, detail="Доступ запрещен")
+    
+    # Безопасный запрос с использованием AttemptStatus из models
+    attempts = (
+        db.query(Attempt)
+        .filter(Attempt.status == AttemptStatus.COMPLETED.value)
+        .order_by(Attempt.finished_at.desc())
+        .all()
+    )
+    return render(request, "all_results.html", user=user, active="results", attempts=attempts)

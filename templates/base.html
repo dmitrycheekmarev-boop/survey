@@ -30,16 +30,34 @@
             </a>
         </div>
         <nav class="flex-1 px-3 py-4 space-y-1">
+            <!-- ДЛЯ АДМИНОВ И МЕТОДИСТОВ -->
             {% if user and (user.is_admin or user.is_methodist) %}
                 {{ navlink('/dashboard', 'Дашборд', 'dashboard') }}
                 {{ navlink('/tests', 'Тесты', 'tests') }}
                 {{ navlink('/sequences', 'Последовательности', 'sequences') }}
                 {{ navlink('/assignments', 'Назначения', 'assignments') }}
                 {{ navlink('/statistics', 'Статистика', 'statistics') }}
-                {% if user.is_admin %}{{ navlink('/users', 'Пользователи', 'users') }}{% endif %}
-                {% if user.has_permission('audit.view') %}{{ navlink('/audit', 'Журнал аудита', 'audit') }}{% endif %}
-            {% else %}
-                {{ navlink('/student', 'Мои тесты', 'student') }}
+                
+                <!-- ОБЩИЕ РЕЗУЛЬТАТЫ (Добавлено для методиста) -->
+                {{ navlink('/results', 'Результаты студентов', 'results') }}
+                
+                <!-- ТОЛЬКО ДЛЯ МЕТОДИСТОВ -->
+                {% if user.is_methodist %}
+                    {{ navlink('/students', 'Список студентов', 'students') }}
+                {% endif %}
+
+                <!-- ТОЛЬКО ДЛЯ АДМИНОВ -->
+                {% if user.is_admin %}
+                    {{ navlink('/users', 'Пользователи', 'users') }}
+                    {% if user.has_permission('audit.view') %}
+                        {{ navlink('/audit', 'Журнал аудита', 'audit') }}
+                    {% endif %}
+                {% endif %}
+
+            <!-- ДЛЯ СТУДЕНТОВ -->
+            {% elif user and user.is_student %}
+                {{ navlink('/student', 'Доступные тесты', 'student') }}
+                {{ navlink('/student_results', 'Мои результаты', 'student_results') }}
             {% endif %}
         </nav>
         <div class="px-5 py-4 border-t border-gray-800 text-xs text-gray-400">
