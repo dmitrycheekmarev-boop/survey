@@ -11,15 +11,20 @@
         <div class="flex justify-between items-start mb-3">
             <div>
                 <div class="font-semibold text-gray-900">{{ a.sequence.title }}</div>
-                                {% if a.sequence.description %}<div class="text-xs text-gray-500 whitespace-pre-wrap">{{ a.sequence.description }}</div>{% endif %}
+                {% if a.sequence.description %}<div class="text-xs text-gray-500">{{ a.sequence.description }}</div>{% endif %}
             </div>
             <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{{ a.progress_percent }}%</span>
         </div>
         <ul class="divide-y divide-gray-100">
-            {% for p in a.progress_items %}
-            <li class="flex items-center justify-between py-2">
-                <span class="text-sm text-gray-800">{{ p.test.title }}</span>
-                <span class="flex items-center space-x-3">
+            {% for p in progress_map.get(a.id, []) %}
+            <li class="flex items-start justify-between py-2 gap-4">
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-gray-800">{{ p.test.title }}</div>
+                    {% if p.test.description %}
+                    <div class="text-xs text-gray-500 mt-0.5 truncate">{{ p.test.description }}</div>
+                    {% endif %}
+                </div>
+                <span class="flex items-center space-x-3 flex-shrink-0">
                     {% if p.status == 'completed' %}
                         <span class="text-xs text-green-600">завершён</span>
                         {% if p.attempt_id %}
@@ -45,28 +50,6 @@
 {% else %}
 <p class="text-sm text-gray-400 mb-8">Назначенных последовательностей нет.</p>
 {% endif %}
-
-<h2 class="text-lg font-semibold mb-3">Доступные тесты</h2>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {% for t in tests %}
-    <div class="card p-5 flex flex-col justify-between">
-        <div>
-                    <div class="font-semibold text-gray-900">{{ t.title }}</div>
-                    {% if t.description %}<div class="text-xs text-gray-500 mt-1 whitespace-pre-wrap">{{ t.description }}</div>{% endif %}
-                </div>
-                <div class="mt-4 flex items-center justify-between">
-            <span class="text-xs text-gray-400">{{ t.published_version.version_no if t.published_version else '—' }} версия</span>
-            {% if t.published_version %}
-            <button onclick="startTest({{ t.id }}, null)" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded">Начать</button>
-            {% else %}
-            <span class="text-xs text-gray-400">нет опубликованной версии</span>
-            {% endif %}
-        </div>
-    </div>
-    {% else %}
-    <p class="text-sm text-gray-400">Доступных тестов нет.</p>
-    {% endfor %}
-</div>
 {% endblock %}
 
 {% block scripts %}

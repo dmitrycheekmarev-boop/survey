@@ -41,7 +41,9 @@
                 <th class="text-left px-4 py-3 font-medium">Шкала</th>
                 <th class="text-left px-4 py-3 font-medium">Сырой балл</th>
                 <th class="text-left px-4 py-3 font-medium">Нормализ.</th>
+                {% if not user.is_student %}
                 <th class="text-left px-4 py-3 font-medium">Уровень</th>
+                {% endif %}
                 <th class="text-left px-4 py-3 font-medium">Интерпретация</th>
             </tr>
         </thead>
@@ -54,19 +56,11 @@
                 </td>
                 <td class="px-4 py-3 font-semibold">{{ r.raw_score }}</td>
                 <td class="px-4 py-3 text-gray-600">{{ r.normalized_score if r.normalized_score is not none else '—' }}</td>
-                <td class="px-4 py-3">
-                    {% if r.level %}
-                        {% if r.level == 'высокий' %}
-                            <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">высокий</span>
-                        {% elif r.level == 'средний' %}
-                            <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">средний</span>
-                        {% else %}
-                            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">низкий</span>
-                        {% endif %}
-                    {% else %}
-                        <span class="text-gray-400">—</span>
-                    {% endif %}
+                {% if not user.is_student %}
+                <td class="px-4 py-3 text-gray-500 text-xs">
+                    {{ r.level or '—' }}
                 </td>
+                {% endif %}
                 <td class="px-4 py-3 text-gray-600">{{ r.interpretation or '—' }}</td>
             </tr>
             {% else %}

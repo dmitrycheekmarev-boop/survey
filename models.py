@@ -359,6 +359,15 @@ class Test(Base):
     sequence_items: list["SequenceItem"] = relationship("SequenceItem", back_populates="test")
     user_progress: list["UserTestProgress"] = relationship("UserTestProgress", back_populates="test")
 
+    # --- связи для published_version ---
+    published_version_rel: "TestVersion" = relationship(
+        "TestVersion",
+        primaryjoin="and_(Test.id==TestVersion.test_id, TestVersion.is_published==True)",
+        order_by="desc(TestVersion.version_no)",
+        viewonly=True,
+        uselist=False,
+    )
+
     # --- хелперы ---
     @property
     def latest_version(self) -> Optional["TestVersion"]:
@@ -368,8 +377,7 @@ class Test(Base):
     @property
     def published_version(self) -> Optional["TestVersion"]:
         """Последняя опубликованная версия — актуальная для студента."""
-        published = [v for v in self.versions if v.is_published]
-        return max(published, key=lambda v: v.version_no) if published else None
+        return self.published_version_rel
 
     def get_version(self, version_no: int) -> Optional["TestVersion"]:
         return next((v for v in self.versions if v.version_no == version_no), None)

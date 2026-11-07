@@ -1,4 +1,8 @@
 from __future__ import annotations
+from sqlalchemy import event
+
+
+
 """
 database.py — подключение к PostgreSQL (SQLAlchemy 2.x) для системы
 психологического тестирования.
@@ -391,3 +395,13 @@ __all__ = [
     "ping",
     "session_scope",
 ]
+
+# Включаем WAL-режим для SQLite, чтобы избежать фризов при параллельной работе
+@event.listens_for(engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    # Применяем PRAGMA только если это SQLite-соединение
+    if "sqlite" in str(engine.url):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA synchronous=NORMAL")
+        cursor.close()

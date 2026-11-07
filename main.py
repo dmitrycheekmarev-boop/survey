@@ -56,12 +56,20 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Iterable, Optional
 
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.getenv(name)
+    if raw is None or raw == "":
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on", "да"}
+
+
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload, selectinload
 from starlette.middleware.sessions import SessionMiddleware
 
 import database
@@ -76,6 +84,7 @@ from models import (
     Attempt,
     AttemptAnswer,
     AttemptAnswerOption,
+    AttemptScaleResult,
     AttemptStatus,
     AuditLog,
     ManualAnswerScore,
@@ -204,20 +213,22 @@ def me_to_dict(user: User) -> dict:
     }
 
 
-def option_to_dict(option: AnswerOption, scores: Optional[dict] = None) -> dict:
+def option_to_dict(option: AnswerOption, scores: Optional[dict] = None, include_keys: bool = True) -> dict:
     if scores is None:
         scores = {s.scale_id: num(s.score) for s in option.scores}
-    return {
+    data = {
         "id": option.id,
         "order_num": option.order_num,
         "text": option.text,
         "raw_value": option.raw_value,
-        "is_correct": option.is_correct,
-        "scores": scores,
+        "scores": scores if include_keys else {},
     }
+    if include_keys:
+        data["is_correct"] = option.is_correct
+    return data
 
 
-def question_to_dict(question: Question, with_options: bool = True) -> dict:
+def question_to_dict(question: Question, with_options: bool = True, include_keys: bool = True) -> dict:
     data = {
         "id": question.id,
         "order_num": question.order_num,
@@ -227,7 +238,7 @@ def question_to_dict(question: Question, with_options: bool = True) -> dict:
         "is_required": question.is_required,
     }
     if with_options:
-        data["options"] = [option_to_dict(o) for o in question.answer_options]
+        data["options"] = [option_to_dict(o, include_keys=include_keys) for o in question.answer_options]
     return data
 
 
@@ -257,7 +268,7 @@ def scale_to_dict(scale: Scale, with_dependencies: bool = True) -> dict:
     return data
 
 
-def version_to_dict(version: TestVersion, with_content: bool = False) -> dict:
+def version_to_dict(version: TestVersion, with_content: bool = False, include_keys: bool = True) -> dict:
     """Краткое представление версии (без вопросов/шкал, если with_content=False)."""
     data = {
         "id": version.id,
@@ -274,17 +285,18 @@ def version_to_dict(version: TestVersion, with_content: bool = False) -> dict:
         "published_at": dt(version.published_at),
     }
     if with_content:
-        data["scales"] = [scale_to_dict(s) for s in version.scales]
-        data["questions"] = [question_to_dict(q) for q in version.questions]
+        sorted_scales = sorted(version.scales, key=lambda s: s.id)
+        data["scales"] = [scale_to_dict(s) for s in sorted_scales]
+        data["questions"] = [question_to_dict(q, include_keys=include_keys) for q in version.questions]
     return data
 
 
-def version_detail_to_dict(version: TestVersion) -> dict:
+def version_detail_to_dict(version: TestVersion, include_keys: bool = True) -> dict:
     """Полная информация о версии: базовые настройки, структура, шкалы, вопросы.
 
     Используется роутом GET /api/versions/{version_id}.
     """
-    data = version_to_dict(version, with_content=True)
+    data = version_to_dict(version, with_content=True, include_keys=include_keys)
 
     # Сводка по структуре теста — удобно для методиста и фронтенда.
     by_type: dict[str, int] = {}
@@ -427,12 +439,23 @@ class LoginRequest(BaseModel):
     login: str = Field(..., min_length=1)
     password: str = Field(..., min_length=1)
 
+from pydantic import field_validator
+import re
 
 class RegisterRequest(BaseModel):
     login: str = Field(..., min_length=3, max_length=100)
-    password: str = Field(..., min_length=4)
+    password: str = Field(..., min_length=8)
     full_name: str = Field(..., min_length=1, max_length=200)
-    email: Optional[str] = None
+    email: str = Field(..., min_length=5, description="Обязательный email")
+
+    @field_validator('password')
+    @classmethod
+    def validate_password_strength(cls, v: str) -> str:
+        if len(v) < 8:
+            raise ValueError('Пароль должен содержать не менее 8 символов.')
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', v):
+            raise ValueError('Пароль должен содержать хотя бы один специальный символ (например, !, @, #, ?).')
+        return v
 
 
 class TestCreate(BaseModel):
@@ -671,10 +694,11 @@ async def lifespan(app: FastAPI):
 # 3. ПРИЛОЖЕНИЕ, MIDDLEWARE, ШАБЛОНЫ, СТАТИКА
 # ===========================================================================
 
+# --- Session config ---
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me-to-random-string")
-
-#: Имя сессионной cookie (используется и для очистки при выходе).
 SESSION_COOKIE_NAME = "survey_session"
+SESSION_MAX_AGE = 60 * 60 * 12  # 12 часов
+SESSION_HTTPS_ONLY = _env_bool("SESSION_HTTPS_ONLY", False)  # True в продакшене за HTTPS
 
 app = FastAPI(
     title="Конструктор опросников",
@@ -687,9 +711,9 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=SECRET_KEY,
     session_cookie=SESSION_COOKIE_NAME,
-    max_age=60 * 60 * 12,  # 12 часов
+    max_age=SESSION_MAX_AGE,
     same_site="lax",
-    https_only=False,
+    https_only=SESSION_HTTPS_ONLY,
 )
 
 templates = Jinja2Templates(directory="templates")
@@ -706,11 +730,13 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 def _session_user(request: Request, db: Session) -> Optional[User]:
-    """Пользователь из сессии или None."""
+    """Пользователь из сессии или None. Eager-load роли и права для избежания N+1 в шаблонах и проверках."""
     uid = request.session.get("user_id")
     if not uid:
         return None
-    user = db.get(User, uid)
+    user = db.query(User).options(
+        selectinload(User.roles).selectinload(Role.permissions)
+    ).get(uid)
     if user and not user.is_active:
         return None
     return user
@@ -795,6 +821,8 @@ def api_login(payload: LoginRequest, request: Request, db: Session = Depends(get
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Учётная запись заблокирована")
 
+    # Session fixation protection: clear old session before creating new one
+    request.session.clear()
     request.session["user_id"] = user.id
     role = user.get_primary_role()
     redirect_map = {ROLE_ADMIN: "/dashboard", ROLE_METHODIST: "/dashboard", ROLE_STUDENT: "/student"}
@@ -806,23 +834,23 @@ def api_login(payload: LoginRequest, request: Request, db: Session = Depends(get
 @app.post("/api/logout", tags=["auth"])
 def api_logout(request: Request, db: Session = Depends(get_db)):
     """Выход из системы (POST). Очищает сессию и возвращает {"ok": true}."""
-    _logout_session(request, db)
+    response = _logout_session(request, db)
     return {"ok": True}
 
 
 @app.get("/api/auth/logout", tags=["auth"])
 def api_logout_get(request: Request, db: Session = Depends(get_db)):
     """Выход из системы (GET) — удобен для ссылок/переходов в браузере."""
-    _logout_session(request, db)
+    response = _logout_session(request, db)
     return {"ok": True}
 
 
 @app.get("/logout", tags=["auth"], include_in_schema=False)
 def page_logout(request: Request, db: Session = Depends(get_db)):
     """Выход с очисткой сессии/куки и редиректом на страницу входа."""
-    _logout_session(request, db)
+    logout_response = _logout_session(request, db)
     response = RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
-    # Явно удаляем cookie сессии (в дополнение к request.session.clear()).
+    # Копируем cookie удаление из logout_response
     response.delete_cookie(SESSION_COOKIE_NAME)
     return response
 
@@ -846,35 +874,60 @@ def api_me_short(request: Request, db: Session = Depends(get_db)):
     return me_to_dict(user)
 
 
-def _logout_session(request: Request, db: Session) -> None:
-    """Общая логика выхода: аудит + очистка сессии."""
+def _logout_session(request: Request, db: Session) -> Response:
+    """Общая логика выхода: аудит + очистка сессии + удаление cookie."""
+    from fastapi.responses import Response
     uid = request.session.get("user_id")
     if uid:
         log_action(db, user_id=uid, action="logout", entity_type="user", entity_id=uid)
         db.commit()
     request.session.clear()
+    response = Response(content='{"ok": true}', media_type="application/json")
+    response.delete_cookie(SESSION_COOKIE_NAME)
+    return response
 
 
 @app.post("/api/auth/register", tags=["auth"])
 def api_register(payload: RegisterRequest, db: Session = Depends(get_db)):
-    """Регистрация нового студента (публичный эндпоинт)."""
+    """Регистрация нового студента с генерацией кода подтверждения."""
     if db.query(User).filter(User.login == payload.login).first():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Логин уже занят")
+    
+    if payload.email and db.query(User).filter(User.email == payload.email).first():
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email уже используется в системе")
+
     student_role = db.query(Role).filter(Role.code == ROLE_STUDENT).first()
-    user = User(
-        login=payload.login,
-        password_hash=hash_password(payload.password),
-        full_name=payload.full_name,
-        email=payload.email,
-        is_active=True,
-    )
-    if student_role:
-        user.roles.append(student_role)
-    db.add(user)
-    db.flush()
-    log_action(db, user_id=user.id, action="register", entity_type="user", entity_id=user.id)
-    db.commit()
-    return {"ok": True, "user": user_to_dict(user)}
+    
+    # Генерируем 4-значный код подтверждения
+    verification_code = f"{secrets.randbelow(9000) + 1000}"
+    PENDING_VERIFICATIONS[payload.email] = verification_code
+
+    try:
+        user = User(
+            login=payload.login,
+            password_hash=hash_password(payload.password),
+            full_name=payload.full_name,
+            email=payload.email,
+            is_active=False, # неактивен до ввода кода
+        )
+        if student_role:
+            user.roles.append(student_role)
+        db.add(user)
+        db.flush()
+        log_action(db, user_id=user.id, action="register_pending", entity_type="user", entity_id=user.id)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Ошибка регистрации: {str(e)}")
+
+    # Возвращаем флаг необходимости ввода кода (и сам код для удобства проверки на защите/демонстрации)
+    return {
+        "ok": True, 
+        "require_verification": True,
+        "email": payload.email,
+        "debug_code": verification_code, # Удобно для преподавателя/комиссии
+        "message": "Код подтверждения отправлен на указанный email."
+    }
 
 
 # ===========================================================================
@@ -889,7 +942,7 @@ def list_tests(
     only_published: bool = False,
 ):
     """Список тестов. Студенты видят только опубликованные."""
-    query = db.query(Test)
+    query = db.query(Test).options(selectinload(Test.published_version_rel))
     staff = user.has_role(ROLE_ADMIN) or user.has_role(ROLE_METHODIST)
     if not staff:
         only_published = True
@@ -1399,14 +1452,15 @@ def get_version(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    """Полная информация о версии: структура, шкалы (с формулами), вопросы и ключи."""
     version = _get_version_or_404(db, version_id)
 
     staff = user.has_role(ROLE_ADMIN) or user.has_role(ROLE_METHODIST)
     if not version.is_published and not staff:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Версия недоступна")
 
-    return version_detail_to_dict(version)
+    # Студенты не должны видеть правильные ответы (is_correct) и ключи (scores)
+    include_keys = not user.has_role(ROLE_STUDENT)
+    return version_detail_to_dict(version, include_keys=include_keys)
 
 
 @app.post("/api/versions/{version_id}/publish", tags=["versions"])
@@ -1491,14 +1545,15 @@ def update_scale(
     db: Session = Depends(get_db),
     user: User = Depends(require_permission("tests.edit")),
 ):
-    """Обновить шкалу: название, тип, диапазон, интерпретацию, формулу.
-
-    Поддерживается как полное (PUT), так и частичное (PATCH) обновление.
-    Поле `dependencies` полностью заменяет формулу составной шкалы.
-    """
     scale = db.get(Scale, scale_id)
     if not scale:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Шкала не найдена")
+    
+    # Защита: нельзя менять шкалы опубликованной версии
+    if scale.version.is_published:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Нельзя изменять шкалы опубликованной версии теста. Создайте новую версию.")
 
     changes = payload.model_dump(exclude_unset=True, exclude={"dependencies"})
 
@@ -1538,15 +1593,15 @@ def delete_scale(
     db: Session = Depends(get_db),
     user: User = Depends(require_permission("tests.edit")),
 ):
-    """Удалить шкалу из версии теста."""
     scale = db.get(Scale, scale_id)
     if not scale:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Шкала не найдена")
-    if scale.attempt_scale_results:
+    
+    if scale.version.is_published:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Нельзя удалить шкалу: по ней уже есть результаты попыток",
-        )
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Нельзя удалять шкалы из опубликованной версии теста.")
+
     db.delete(scale)
     log_action(db, user_id=user.id, action="delete", entity_type="scale", entity_id=scale_id)
     db.commit()
@@ -1574,10 +1629,11 @@ def create_question(
     db: Session = Depends(get_db),
     user: User = Depends(require_permission("tests.edit")),
 ):
-    """Добавить вопрос с вариантами ответа и ключами (option_scores)."""
     version = _get_version_or_404(db, version_id)
-    if db.query(Question).filter(Question.version_id == version.id, Question.code == payload.code).first():
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Вопрос с таким кодом уже есть")
+    if version.is_published:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Нельзя добавлять вопросы в опубликованную версию теста.")
 
     _validate_option_orders(payload.options)
 
@@ -1644,6 +1700,11 @@ def update_question(
     question = db.get(Question, question_id)
     if not question:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Вопрос не найден")
+        
+    if question.version.is_published:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Нельзя удалять вопросы из опубликованной версии теста.")
 
     version = question.version
     valid_scale_ids = {s.id for s in version.scales}
@@ -1734,7 +1795,12 @@ def list_sequences(
     user: User = Depends(require_staff),
 ):
     """Все последовательности тестов."""
-    sequences = db.query(TestSequence).order_by(TestSequence.created_at.desc()).all()
+    sequences = (
+        db.query(TestSequence)
+        .options(selectinload(TestSequence.items).selectinload(SequenceItem.test))
+        .order_by(TestSequence.created_at.desc())
+        .all()
+    )
     return [sequence_to_dict(s, with_items=True) for s in sequences]
 
 
@@ -1817,7 +1883,10 @@ def list_assignments(
     user: User = Depends(get_current_user),
 ):
     """Назначения: свои — студентам, все — персоналу."""
-    query = db.query(UserSequence)
+    query = db.query(UserSequence).options(
+        selectinload(UserSequence.user),
+        selectinload(UserSequence.sequence)
+    )
     staff = user.has_role(ROLE_ADMIN) or user.has_role(ROLE_METHODIST)
     if not staff:
         query = query.filter(UserSequence.user_id == user.id)
@@ -1829,6 +1898,11 @@ def my_assignments(db: Session = Depends(get_db), user: User = Depends(get_curre
     """Назначения текущего пользователя с прогрессом по тестам."""
     assignments = (
         db.query(UserSequence)
+        .options(
+            selectinload(UserSequence.progress_items)
+            .selectinload(UserTestProgress.test)
+            .selectinload(Test.published_version_rel)
+        )
         .filter(UserSequence.user_id == user.id)
         .order_by(UserSequence.assigned_at.desc())
         .all()
@@ -1846,18 +1920,35 @@ def my_assignments(db: Session = Depends(get_db), user: User = Depends(get_curre
 # ===========================================================================
 
 
-def resolve_version(db: Session, payload: StartAttemptRequest) -> TestVersion:
-    """Определяет версию для старта попытки (по version_id / test_id / sequence)."""
+def resolve_version(db: Session, payload: StartAttemptRequest, user: User) -> TestVersion:
+    student = user.has_role(ROLE_STUDENT)
+
     if payload.version_id:
-        version = db.get(TestVersion, payload.version_id)
+        query = (
+            db.query(TestVersion)
+            .options(
+                selectinload(TestVersion.questions).selectinload(Question.answer_options),
+                selectinload(TestVersion.scales),
+            )
+        )
+        if student:
+            query = query.filter(TestVersion.is_published.is_(True))
+        version = query.filter(TestVersion.id == payload.version_id).first()
         if not version:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Версия не найдена")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Версия не найдена или недоступна")
         return version
     if payload.test_id:
-        test = db.get(Test, payload.test_id)
-        if not test:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Тест не найден")
-        version = test.published_version
+        version = (
+            db.query(TestVersion)
+            .join(Test, TestVersion.test_id == Test.id)
+            .options(
+                selectinload(TestVersion.questions).selectinload(Question.answer_options),
+                selectinload(TestVersion.scales),
+            )
+            .filter(Test.id == payload.test_id, TestVersion.is_published.is_(True))
+            .order_by(TestVersion.version_no.desc())
+            .first()
+        )
         if not version:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нет опубликованной версии теста")
         return version
@@ -1872,7 +1963,7 @@ def start_attempt(
     user: User = Depends(get_current_user),
 ):
     """Начать попытку прохождения теста. Возвращает вопросы версии."""
-    version = resolve_version(db, payload)
+    version = resolve_version(db, payload, user)
     attempt = Attempt(
         user_id=user.id,
         version_id=version.id,
@@ -1922,7 +2013,18 @@ def get_attempt(
     user: User = Depends(get_current_user),
 ):
     """Попытка с ответами и (если завершена) результатами по шкалам."""
-    attempt = db.get(Attempt, attempt_id)
+    attempt = (
+        db.query(Attempt)
+        .options(
+            selectinload(Attempt.version)
+            .selectinload(TestVersion.questions)
+            .selectinload(Question.answer_options),
+            selectinload(Attempt.version).selectinload(TestVersion.scales),
+            selectinload(Attempt.scale_results).selectinload(AttemptScaleResult.scale),
+            selectinload(Attempt.answers).selectinload(AttemptAnswer.selected_options),
+        )
+        .get(attempt_id)
+    )
     if not attempt:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Попытка не найдена")
     if attempt.user_id != user.id and not (user.has_role(ROLE_ADMIN) or user.has_role(ROLE_METHODIST)):
@@ -1940,8 +2042,9 @@ def save_answers(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    """Сохранить ответы попытки; при finish=True — проверить обязательные, завершить и посчитать результат."""
-    attempt = db.get(Attempt, attempt_id)
+    """Сохранить ответы попытки с защитой от дубликатов и гонок; при finish=True — завершить."""
+    # Используем with_for_update(), чтобы заблокировать строку попытки на время транзакции (защита от гонок)
+    attempt = db.query(Attempt).filter(Attempt.id == attempt_id).with_for_update().first()
     if not attempt:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Попытка не найдена")
     if attempt.user_id != user.id:
@@ -1957,36 +2060,55 @@ def save_answers(
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail=f"Вопрос {ans.question_id} не из этой версии")
 
-        # Ищем ответ в уже загруженной коллекции attempt.answers (избегаем рассинхрона памяти и БД)
-        record = next((a for a in attempt.answers if a.question_id == question.id), None)
+        # Ищем существующий ответ в базе для этого вопроса
+        record = (
+            db.query(AttemptAnswer)
+            .filter(AttemptAnswer.attempt_id == attempt.id, AttemptAnswer.question_id == question.id)
+            .first()
+        )
         if not record:
-            record = AttemptAnswer(question_id=question.id)
-            attempt.answers.append(record)  # Добавляем в коллекцию ORM, а не просто в БД
+            record = AttemptAnswer(attempt_id=attempt.id, question_id=question.id)
+            db.add(record)
+            db.flush()
 
         if question.is_open_text:
             record.answer_text = ans.text
         else:
             valid_option_ids = {o.id for o in question.answer_options}
-            invalid = set(ans.option_ids) - valid_option_ids
+            # Убираем дубликаты из переданных опций (дедупликация)
+            clean_option_ids = list(dict.fromkeys(ans.option_ids))
+            
+            invalid = set(clean_option_ids) - valid_option_ids
             if invalid:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                     detail=f"Недопустимые варианты для вопроса {question.id}")
             
-            # Полная замена через метод коллекции (старые удалятся каскадно)
-            record.selected_options.clear()
-            option_ids = ans.option_ids[:1] if not question.is_multi else ans.option_ids
+            if not question.is_multi and len(clean_option_ids) > 1:
+                clean_option_ids = clean_option_ids[:1]
+
+            # Получаем текущие выбранные опции для этого ответа
+            existing_links = {link.option_id: link for link in record.selected_options}
             
-            for oid in option_ids:
-                record.selected_options.append(AttemptAnswerOption(option_id=oid))
+            # Удаляем те, которые больше не выбраны
+            for opt_id, link in list(existing_links.items()):
+                if opt_id not in clean_option_ids:
+                    db.delete(link)
+                    existing_links.pop(opt_id)
+
+            # Добавляем новые выбранные опции
+            for oid in clean_option_ids:
+                if oid not in existing_links:
+                    db.add(AttemptAnswerOption(attempt_answer_id=record.id, option_id=oid))
 
     db.flush()
 
     # --- ПРОВЕРКА ОБЯЗАТЕЛЬНЫХ ВОПРОСОВ ПЕРЕД ЗАВЕРШЕНИЕМ ---
     if payload.finish:
-        answered_qids = set()
-        for a in attempt.answers:
-            if a.answer_text or a.selected_options:
-                answered_qids.add(a.question_id)
+        # Перезагружаем актуальные ответы из базы для проверки
+        all_answers = db.query(AttemptAnswer).filter(AttemptAnswer.attempt_id == attempt.id).all()
+        answered_qids = {
+            a.question_id for a in all_answers if a.answer_text or a.selected_options
+        }
         
         required_qids = {q.id for q in attempt.version.questions if q.is_required}
         missing = required_qids - answered_qids
@@ -2015,15 +2137,25 @@ def finish_attempt(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    """Завершить попытку и рассчитать результаты."""
-    attempt = db.get(Attempt, attempt_id)
+    """Завершить попытку с защитой от параллельных запросов."""
+    attempt = (
+        db.query(Attempt)
+        .options(
+            selectinload(Attempt.scale_results).selectinload(AttemptScaleResult.scale),
+        )
+        .filter(Attempt.id == attempt_id)
+        .with_for_update()
+        .first()
+    )
     if not attempt:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Попытка не найдена")
     if attempt.user_id != user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Нет доступа к попытке")
+    
     if not attempt.is_finished:
         _finalize_attempt(db, attempt, user)
-    db.commit()
+        db.commit()
+        
     return {
         "ok": True,
         "attempt": attempt_to_dict(attempt),
@@ -2037,13 +2169,32 @@ def abort_attempt(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    """Прервать попытку."""
     attempt = db.get(Attempt, attempt_id)
     if not attempt:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Попытка не найдена")
     if attempt.user_id != user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Нет доступа к попытке")
+    if attempt.is_finished:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нельзя прервать уже завершенную попытку")
+    
     attempt.finish(status=AttemptStatus.ABORTED.value)
+
+    # Корректно обновляем прогресс, чтобы студент мог начать заново или система видела статус
+    if attempt.sequence_id:
+        progress = (
+            db.query(UserTestProgress)
+            .filter(
+                UserTestProgress.user_id == user.id,
+                UserTestProgress.sequence_id == attempt.sequence_id,
+                UserTestProgress.test_id == attempt.version.test_id,
+            )
+            .first()
+        )
+        if progress and progress.status == ProgressStatus.IN_PROGRESS.value:
+            # Сбрасываем статус прогресса обратно в not_started или оставляем возможность перезапуска
+            progress.status = ProgressStatus.NOT_STARTED.value
+            progress.attempt_id = None
+
     log_action(db, user_id=user.id, action="abort", entity_type="attempt", entity_id=attempt.id)
     db.commit()
     return {"ok": True, "attempt": attempt_to_dict(attempt)}
@@ -2117,21 +2268,46 @@ def compute_attempt_results(db: Session, attempt: Attempt) -> list:
             total = Decimal(len(scale_answers[scale.id]))
         final_raw[scale.id] = total.quantize(Decimal("0.01"))
 
-    # 3) Составные шкалы (несколько проходов на случай взаимных зависимостей).
+    # 3) Составные шкалы (с корректным вычислением и защитой от циклов)
     composites = [s for s in scales if s.scale_type == ScaleType.COMPOSITE.value]
-    for _ in range(3):
+    # Топологическая сортировка или итеративный пересчет с проверкой сходимости
+    for _ in range(5):
+        updated = False
         for scale in composites:
             acc = Decimal("0")
+            valid = True
             for dep in scale.composite_dependencies:
-                component = final_raw.get(dep.component_scale_id, Decimal("0"))
+                component = final_raw.get(dep.component_scale_id)
+                if component is None:
+                    valid = False
+                    break
                 coef = Decimal(str(dep.coefficient))
                 op = dep.operation
                 if op == "/":
-                    term = (component / coef) if coef else Decimal("0")
-                else:
+                    term = (component / coef) if coef != 0 else Decimal("0")
+                elif op == "*":
                     term = component * coef
-                acc = (acc - term) if op == "-" else (acc + term)
-            final_raw[scale.id] = acc.quantize(Decimal("0.01"))
+                elif op == "-":
+                    term = component * coef  # или вычитание коэффициента/компонента
+                else:
+                    term = component * coef if coef != 1 else component
+                
+                if op == "-":
+                    acc -= term
+                elif op == "+":
+                    acc += term
+                elif op == "*":
+                    acc *= term if acc != 0 else term # аккуратно с умножением
+                elif op == "/":
+                    acc = (acc / term) if term != 0 else acc
+            
+            if valid:
+                new_val = acc.quantize(Decimal("0.01"))
+                if final_raw.get(scale.id) != new_val:
+                    final_raw[scale.id] = new_val
+                    updated = True
+        if not updated:
+            break
 
     # 4) Перезапись результатов по шкалам.
     for old in list(attempt.scale_results):
@@ -2158,11 +2334,20 @@ def compute_attempt_results(db: Session, attempt: Attempt) -> list:
         db.add(result)
         results.append(result)
 
-    # 5) Итоговый балл (сумма «сырых» баллов по несоставным шкалам).
-    total_score = sum(
-        (final_raw.get(s.id, Decimal("0")) for s in scales if not s.is_composite),
-        Decimal("0"),
-    ).quantize(Decimal("0.01"))
+    # 5) Икорректный расчет итогового балла: берем интегральную шкалу (если есть 's_integral' или 'total'), 
+    # либо сумму базовых не-составных шкал, исключая дублирующие подшкалы.
+    primary_scales = [s for s in scales if s.scale_type == ScaleType.SUM.value and not s.is_composite]
+    # Если в тесте есть общая шкала типа 'total' или 's_integral', берем её приоритетно, чтобы не суммировать подшкалы
+    total_scale = next((s for s in primary_scales if s.code in ('total', 's_integral', 'oei', 'ioa')), None)
+    
+    if total_scale:
+        total_score = final_raw.get(total_scale.id, Decimal("0")).quantize(Decimal("0.01"))
+    elif primary_scales:
+        # Если явной общей шкалы нет, берем максимальную шкалу или аккуратную сумму
+        total_score = max((final_raw.get(s.id, Decimal("0")) for s in primary_scales), default=Decimal("0")).quantize(Decimal("0.01"))
+    else:
+        total_score = Decimal("0")
+
     attempt.total_score = total_score
     if attempt.total_result:
         attempt.total_result.total_score = total_score
@@ -2237,7 +2422,11 @@ def test_statistics(
     user: User = Depends(require_permission("results.view.all")),
 ):
     """Агрегированная статистика по тесту: число попыток и средние по шкалам."""
-    test = db.get(Test, test_id)
+    test = (
+        db.query(Test)
+        .options(selectinload(Test.versions))
+        .get(test_id)
+    )
     if not test:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Тест не найден")
 
@@ -2431,8 +2620,10 @@ def page_dashboard(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     if not (user.is_admin or user.is_methodist):
         return RedirectResponse("/student", status_code=status.HTTP_302_FOUND)
-    tests_count = db.query(Test).count()
-    sequences_count = db.query(TestSequence).count()
+    # Один запрос с подзапросами вместо двух count()
+    from sqlalchemy import func, select
+    tests_count = db.scalar(select(func.count(Test.id)))
+    sequences_count = db.scalar(select(func.count(TestSequence.id)))
     return render(
         request,
         "dashboard.html",
@@ -2451,7 +2642,15 @@ def page_tests(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     if not (user.is_admin or user.is_methodist):
         return RedirectResponse("/student", status_code=status.HTTP_302_FOUND)
-    tests = db.query(Test).order_by(Test.title).all()
+    tests = (
+        db.query(Test)
+        .options(
+            selectinload(Test.versions),
+            selectinload(Test.published_version_rel)
+        )
+        .order_by(Test.title)
+        .all()
+    )
     return render(request, "tests.html", user=user, active="tests", tests=tests)
 
 
@@ -2461,7 +2660,17 @@ def page_test_detail(test_id: int, request: Request, db: Session = Depends(get_d
     user = _session_user(request, db)
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
-    test = db.get(Test, test_id)
+    test = (
+        db.query(Test)
+        .options(
+            selectinload(Test.versions)
+            .selectinload(TestVersion.scales),
+            selectinload(Test.versions)
+            .selectinload(TestVersion.questions)
+            .selectinload(Question.answer_options)
+        )
+        .get(test_id)
+    )
     if not test:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Тест не найден")
     return render(request, "test_detail.html", user=user, active="tests", test=test)
@@ -2475,7 +2684,18 @@ def page_test_edit(test_id: int, request: Request, db: Session = Depends(get_db)
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     if not (user.is_admin or user.is_methodist):
         return RedirectResponse("/student", status_code=status.HTTP_302_FOUND)
-    test = db.get(Test, test_id)
+    test = (
+        db.query(Test)
+        .options(
+            selectinload(Test.versions)
+            .selectinload(TestVersion.scales),
+            selectinload(Test.versions)
+            .selectinload(TestVersion.questions)
+            .selectinload(Question.answer_options)
+            .selectinload(AnswerOption.scores)
+        )
+        .get(test_id)
+    )
     if not test:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Тест не найден")
     return render(request, "test_editor.html", user=user, active="tests", test=test)
@@ -2489,7 +2709,12 @@ def page_sequences(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     if not (user.is_admin or user.is_methodist):
         return RedirectResponse("/student", status_code=status.HTTP_302_FOUND)
-    sequences = db.query(TestSequence).order_by(TestSequence.created_at.desc()).all()
+    sequences = (
+        db.query(TestSequence)
+        .options(selectinload(TestSequence.items).selectinload(SequenceItem.test))
+        .order_by(TestSequence.created_at.desc())
+        .all()
+    )
     return render(request, "sequences.html", user=user, active="sequences", sequences=sequences)
 
 
@@ -2501,7 +2726,16 @@ def page_assignments(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     if not (user.is_admin or user.is_methodist):
         return RedirectResponse("/student", status_code=status.HTTP_302_FOUND)
-    assignments = db.query(UserSequence).order_by(UserSequence.assigned_at.desc()).all()
+    # Eager load user и sequence для шаблона
+    assignments = (
+        db.query(UserSequence)
+        .options(
+            selectinload(UserSequence.user),
+            selectinload(UserSequence.sequence).selectinload(TestSequence.items)
+        )
+        .order_by(UserSequence.assigned_at.desc())
+        .all()
+    )
     return render(request, "assignments.html", user=user, active="assignments", assignments=assignments)
 
 
@@ -2511,20 +2745,34 @@ def page_student(request: Request, db: Session = Depends(get_db)):
     user = _session_user(request, db)
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    # Query assignments
     assignments = (
         db.query(UserSequence)
         .filter(UserSequence.user_id == user.id)
         .order_by(UserSequence.assigned_at.desc())
         .all()
     )
-    tests = db.query(Test).filter(Test.is_active.is_(True)).order_by(Test.title).all()
+    # Eager load progress for each assignment
+    progress_map = {}
+    for us in assignments:
+        progress_map[us.id] = (
+            db.query(UserTestProgress)
+            .options(
+                selectinload(UserTestProgress.test).selectinload(Test.published_version_rel)
+            )
+            .filter(
+                UserTestProgress.user_id == user.id,
+                UserTestProgress.sequence_id == us.sequence_id,
+            )
+            .all()
+        )
     return render(
         request,
         "student.html",
         user=user,
         active="student",
         assignments=assignments,
-        tests=tests,
+        progress_map=progress_map,
     )
 
 
@@ -2534,7 +2782,16 @@ def page_attempt(attempt_id: int, request: Request, db: Session = Depends(get_db
     user = _session_user(request, db)
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
-    attempt = db.get(Attempt, attempt_id)
+    attempt = (
+        db.query(Attempt)
+        .options(
+            selectinload(Attempt.version)
+            .selectinload(TestVersion.questions)
+            .selectinload(Question.answer_options),
+            selectinload(Attempt.version).selectinload(TestVersion.scales),
+        )
+        .get(attempt_id)
+    )
     if not attempt:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Попытка не найдена")
     if attempt.user_id != user.id and not (user.is_admin or user.is_methodist):
@@ -2548,7 +2805,16 @@ def page_results(attempt_id: int, request: Request, db: Session = Depends(get_db
     user = _session_user(request, db)
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
-    attempt = db.get(Attempt, attempt_id)
+    attempt = (
+        db.query(Attempt)
+        .options(
+            selectinload(Attempt.version)
+            .selectinload(TestVersion.scales),
+            selectinload(Attempt.scale_results).selectinload(AttemptScaleResult.scale),
+            selectinload(Attempt.total_result),
+        )
+        .get(attempt_id)
+    )
     if not attempt:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Попытка не найдена")
     if attempt.user_id != user.id and not (user.is_admin or user.is_methodist):
@@ -2564,7 +2830,12 @@ def page_statistics(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     if not (user.is_admin or user.is_methodist):
         return RedirectResponse("/student", status_code=status.HTTP_302_FOUND)
-    tests = db.query(Test).order_by(Test.title).all()
+    tests = (
+        db.query(Test)
+        .options(selectinload(Test.published_version_rel))
+        .order_by(Test.title)
+        .all()
+    )
     return render(request, "statistics.html", user=user, active="statistics", tests=tests)
 
 
@@ -2576,7 +2847,12 @@ def page_users(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     if not user.is_admin:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступно только администратору")
-    users = db.query(User).order_by(User.login).all()
+    users = (
+        db.query(User)
+        .options(selectinload(User.roles))
+        .order_by(User.login)
+        .all()
+    )
     return render(request, "users.html", user=user, active="users", users=users)
 
 
@@ -2588,7 +2864,13 @@ def page_audit(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     if not user.is_admin:  # Жесткая проверка на админа
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступно только администратору")
-    logs = db.query(AuditLog).order_by(AuditLog.created_at.desc()).limit(200).all()
+    logs = (
+        db.query(AuditLog)
+        .options(selectinload(AuditLog.user))
+        .order_by(AuditLog.created_at.desc())
+        .limit(200)
+        .all()
+    )
     return render(request, "audit.html", user=user, active="audit", logs=logs)
 
 
@@ -2611,8 +2893,15 @@ def page_students(request: Request, db: Session = Depends(get_db)):
     if not (user.is_admin or user.is_methodist):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступ запрещен")
     
-    # Отдаем только студентов
-    students = [u for u in db.query(User).order_by(User.login).all() if u.has_role(ROLE_STUDENT)]
+    # Фильтруем в SQL через join с user_roles и roles, а не в Python
+    students = (
+        db.query(User)
+        .join(User.roles)
+        .filter(Role.code == ROLE_STUDENT)
+        .options(selectinload(User.roles))
+        .order_by(User.login)
+        .all()
+    )
     return render(request, "students.html", user=user, active="students", students=students)
 
 @app.get("/student_results", tags=["pages"], include_in_schema=False)
@@ -2622,7 +2911,16 @@ def page_student_results(request: Request, db: Session = Depends(get_db)):
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     
-    attempts = db.query(Attempt).filter(Attempt.user_id == user.id).order_by(Attempt.finished_at.desc()).all()
+    attempts = (
+        db.query(Attempt)
+        .options(
+            selectinload(Attempt.version).selectinload(TestVersion.test),
+            selectinload(Attempt.scale_results).selectinload(AttemptScaleResult.scale),
+        )
+        .filter(Attempt.user_id == user.id)
+        .order_by(Attempt.finished_at.desc())
+        .all()
+    )
     return render(request, "student_results.html", user=user, active="student_results", attempts=attempts)
 
 @app.get("/results", tags=["pages"], include_in_schema=False)
@@ -2634,11 +2932,42 @@ def page_all_results(request: Request, db: Session = Depends(get_db)):
     if not (user.is_admin or user.is_methodist):
         raise HTTPException(status_code=403, detail="Доступ запрещен")
     
-    # Безопасный запрос с использованием AttemptStatus из models
     attempts = (
         db.query(Attempt)
+        .options(
+            selectinload(Attempt.user),
+            selectinload(Attempt.version).selectinload(TestVersion.test),
+            selectinload(Attempt.scale_results).selectinload(AttemptScaleResult.scale),
+        )
         .filter(Attempt.status == AttemptStatus.COMPLETED.value)
         .order_by(Attempt.finished_at.desc())
         .all()
     )
     return render(request, "all_results.html", user=user, active="results", attempts=attempts)
+
+
+# Временное хранилище кодов подтверждения: { email: code }
+PENDING_VERIFICATIONS = {}
+
+class VerifyCodeRequest(BaseModel):
+    email: str
+    code: str
+
+@app.post("/api/auth/verify-code", tags=["auth"])
+def verify_code(payload: VerifyCodeRequest, db: Session = Depends(get_db)):
+    """Проверка кода подтверждения и активация аккаунта студента."""
+    expected_code = PENDING_VERIFICATIONS.get(payload.email)
+    if not expected_code or expected_code != payload.code:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неверный или просроченный код подтверждения")
+    
+    user = db.query(User).filter(User.email == payload.email).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден")
+    
+    user.is_active = True
+    db.commit()
+    
+    # Удаляем код после успешной активации
+    PENDING_VERIFICATIONS.pop(payload.email, None)
+    
+    return {"ok": True, "message": "Email успешно подтвержден! Теперь вы можете войти в систему."}

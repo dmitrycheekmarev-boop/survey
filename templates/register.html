@@ -12,15 +12,20 @@
         input { width: 100%; padding: 0.5rem; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
         button { width: 100%; padding: 0.75rem; background-color: #16a34a; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
         button:hover { background-color: #15803d; }
-        .error { color: red; margin-bottom: 1rem; min-height: 1.2em; }
+        .error { color: red; margin-bottom: 1rem; min-height: 1.2em; font-size: 0.9rem; }
+        .success { color: green; margin-bottom: 1rem; font-size: 0.9rem; }
+        .hint { margin-top: 1rem; font-size: .8rem; color: #6b7280; }
         .link { margin-top: 1rem; text-align: center; font-size: .9rem; }
         .link a { color: #007bff; text-decoration: none; }
     </style>
 </head>
 <body>
     <div class="card">
-        <h2>Регистрация студента</h2>
+        <h2 id="form-title">Регистрация студента</h2>
         <div id="error" class="error"></div>
+        <div id="success" class="success"></div>
+
+        <!-- Форма регистрации -->
         <form id="register-form">
             <div class="form-group">
                 <label for="login">Логин</label>
@@ -31,34 +36,56 @@
                 <input type="text" id="full_name" name="full_name" required>
             </div>
             <div class="form-group">
-                <label for="email">E-mail (необязательно)</label>
-                <input type="email" id="email" name="email">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required minlength="5">
             </div>
             <div class="form-group">
                 <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" required minlength="4" autocomplete="new-password">
+                <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password">
             </div>
             <button type="submit" id="submit-btn">Зарегистрироваться</button>
         </form>
+
+        <!-- Форма ввода кода (скрыта по умолчанию) -->
+        <form id="verify-form" style="display: none;">
+            <div class="form-group">
+                <label for="code">Введите код подтверждения</label>
+                <input type="text" id="code" name="code" required placeholder="Введите 4 цифры из сообщения">
+                <div class="hint" id="debug-hint" style="color: #2563eb; font-weight: bold; margin-top: 5px;"></div>
+            </div>
+            <button type="submit" id="verify-btn">Подтвердить почту</button>
+        </form>
+
         <div class="link">Уже есть аккаунт? <a href="/login">Войти</a></div>
     </div>
 
     <script>
-        const form = document.getElementById('register-form');
+        const registerForm = document.getElementById('register-form');
+        const verifyForm = document.getElementById('verify-form');
         const errorBox = document.getElementById('error');
-        const submitBtn = document.getElementById('submit-btn');
+        const successBox = document.getElementById('success');
+        const formTitle = document.getElementById('form-title');
+        
+        let registeredEmail = '';
 
-        form.addEventListener('submit', async function (e) {
+        registerForm.addEventListener('submit', async function (e) {
             e.preventDefault();
             errorBox.textContent = '';
-            submitBtn.disabled = true;
+            successBox.textContent = '';
+
+            const password = document.getElementById('password').value;
+            if (password.length < 8 || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                errorBox.textContent = 'Пароль должен быть не менее 8 символов и содержать хотя бы один спецсимвол (например, !).';
+                return;
+            }
 
             const payload = {
                 login: document.getElementById('login').value.trim(),
                 full_name: document.getElementById('full_name').value.trim(),
-                email: document.getElementById('email').value.trim() || null,
-                password: document.getElementById('password').value
+                email: document.getElementById('email').value.trim(),
+                password: password
             };
+            registeredEmail = payload.email;
 
             try {
                 const res = await fetch('/api/auth/register', {
@@ -67,15 +94,55 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await res.json().catch(function () { return {}; });
+                
                 if (!res.ok) {
                     errorBox.textContent = (typeof data.detail === 'string') ? data.detail : 'Ошибка регистрации';
-                    submitBtn.disabled = false;
                     return;
                 }
+
+                if (data.require_verification) {
+                    registerForm.style.display = 'none';
+                    verifyForm.style.display = 'block';
+                    formTitle.textContent = 'Подтверждение почты';
+                    successBox.textContent = data.message || 'Код отправлен.';
+                    
+                    // Выводим отладочный код прямо на экран, чтобы легко проверить без реального почтового сервера
+                    if (data.debug_code) {
+                        document.getElementById('debug-hint').textContent = `[Демо-режим] Ваш код подтверждения: ${data.debug_code}`;
+                    }
+                }
+            } catch (ex) {
+                errorBox.textContent = 'Ошибка сети: ' + ex.message;
+            }
+        });
+
+        verifyForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            errorBox.textContent = '';
+            successBox.textContent = '';
+
+            const payload = {
+                email: registeredEmail,
+                code: document.getElementById('code').value.trim()
+            };
+
+            try {
+                const res = await fetch('/api/auth/verify-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(function () { return {}; });
+
+                if (!res.ok) {
+                    errorBox.textContent = (typeof data.detail === 'string') ? data.detail : 'Неверный код';
+                    return;
+                }
+
+                alert('Почта успешно подтверждена! Сейчас вы будете перенаправлены на страницу входа.');
                 location.href = '/login';
             } catch (ex) {
                 errorBox.textContent = 'Ошибка сети: ' + ex.message;
-                submitBtn.disabled = false;
             }
         });
     </script>

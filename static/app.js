@@ -98,7 +98,12 @@ window.openModal = function(htmlContent) {
         </div>`;
 };
 
+
+
 window.closeModal = function() {
     const root = document.getElementById('modal-root');
     if (root) root.innerHTML = '';
 };
+
+
+
