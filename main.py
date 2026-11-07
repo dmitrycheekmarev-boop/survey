@@ -887,47 +887,6 @@ def _logout_session(request: Request, db: Session) -> Response:
     return response
 
 
-@app.post("/api/auth/register", tags=["auth"])
-def api_register(payload: RegisterRequest, db: Session = Depends(get_db)):
-    """Регистрация нового студента с генерацией кода подтверждения."""
-    if db.query(User).filter(User.login == payload.login).first():
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Логин уже занят")
-    
-    if payload.email and db.query(User).filter(User.email == payload.email).first():
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email уже используется в системе")
-
-    student_role = db.query(Role).filter(Role.code == ROLE_STUDENT).first()
-    
-    # Генерируем 4-значный код подтверждения
-    verification_code = f"{secrets.randbelow(9000) + 1000}"
-    PENDING_VERIFICATIONS[payload.email] = verification_code
-
-    try:
-        user = User(
-            login=payload.login,
-            password_hash=hash_password(payload.password),
-            full_name=payload.full_name,
-            email=payload.email,
-            is_active=False, # неактивен до ввода кода
-        )
-        if student_role:
-            user.roles.append(student_role)
-        db.add(user)
-        db.flush()
-        log_action(db, user_id=user.id, action="register_pending", entity_type="user", entity_id=user.id)
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Ошибка регистрации: {str(e)}")
-
-    # Возвращаем флаг необходимости ввода кода (и сам код для удобства проверки на защите/демонстрации)
-    return {
-        "ok": True, 
-        "require_verification": True,
-        "email": payload.email,
-        "debug_code": verification_code, # Удобно для преподавателя/комиссии
-        "message": "Код подтверждения отправлен на указанный email."
-    }
 
 
 # ===========================================================================
@@ -2606,32 +2565,6 @@ def page_login(request: Request, db: Session = Depends(get_db)):
     return render(request, "login.html", user=None)
 
 
-@app.get("/register", tags=["pages"], include_in_schema=False)
-def page_register(request: Request, db: Session = Depends(get_db)):
-    """Страница регистрации."""
-    return render(request, "register.html", user=None)
-
-
-@app.get("/dashboard", tags=["pages"], include_in_schema=False)
-def page_dashboard(request: Request, db: Session = Depends(get_db)):
-    """Кабинет методиста/администратора."""
-    user = _session_user(request, db)
-    if not user:
-        return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
-    if not (user.is_admin or user.is_methodist):
-        return RedirectResponse("/student", status_code=status.HTTP_302_FOUND)
-    # Один запрос с подзапросами вместо двух count()
-    from sqlalchemy import func, select
-    tests_count = db.scalar(select(func.count(Test.id)))
-    sequences_count = db.scalar(select(func.count(TestSequence.id)))
-    return render(
-        request,
-        "dashboard.html",
-        user=user,
-        active="dashboard",
-        tests_count=tests_count,
-        sequences_count=sequences_count,
-    )
 
 
 @app.get("/tests", tags=["pages"], include_in_schema=False)
@@ -2953,21 +2886,3 @@ class VerifyCodeRequest(BaseModel):
     email: str
     code: str
 
-@app.post("/api/auth/verify-code", tags=["auth"])
-def verify_code(payload: VerifyCodeRequest, db: Session = Depends(get_db)):
-    """Проверка кода подтверждения и активация аккаунта студента."""
-    expected_code = PENDING_VERIFICATIONS.get(payload.email)
-    if not expected_code or expected_code != payload.code:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неверный или просроченный код подтверждения")
-    
-    user = db.query(User).filter(User.email == payload.email).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден")
-    
-    user.is_active = True
-    db.commit()
-    
-    # Удаляем код после успешной активации
-    PENDING_VERIFICATIONS.pop(payload.email, None)
-    
-    return {"ok": True, "message": "Email успешно подтвержден! Теперь вы можете войти в систему."}
