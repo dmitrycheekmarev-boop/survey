@@ -11,7 +11,7 @@
         <div class="flex justify-between items-start mb-3">
             <div>
                 <div class="font-semibold text-gray-900">{{ a.sequence.title }}</div>
-                {% if a.sequence.description %}<div class="text-xs text-gray-500">{{ a.sequence.description }}</div>{% endif %}
+                                {% if a.sequence.description %}<div class="text-xs text-gray-500 whitespace-pre-wrap">{{ a.sequence.description }}</div>{% endif %}
             </div>
             <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{{ a.progress_percent }}%</span>
         </div>
@@ -51,10 +51,10 @@
     {% for t in tests %}
     <div class="card p-5 flex flex-col justify-between">
         <div>
-            <div class="font-semibold text-gray-900">{{ t.title }}</div>
-            {% if t.description %}<div class="text-xs text-gray-500 mt-1">{{ t.description }}</div>{% endif %}
-        </div>
-        <div class="mt-4 flex items-center justify-between">
+                    <div class="font-semibold text-gray-900">{{ t.title }}</div>
+                    {% if t.description %}<div class="text-xs text-gray-500 mt-1 whitespace-pre-wrap">{{ t.description }}</div>{% endif %}
+                </div>
+                <div class="mt-4 flex items-center justify-between">
             <span class="text-xs text-gray-400">{{ t.published_version.version_no if t.published_version else '—' }} версия</span>
             {% if t.published_version %}
             <button onclick="startTest({{ t.id }}, null)" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded">Начать</button>
