@@ -8,6 +8,34 @@
     <div class="text-sm text-gray-500 font-mono">{{ test.code }}</div>
 </div>
 
+<div class="mb-6 flex items-center justify-between">
+    <div>
+        <label class="block text-xs font-medium text-gray-500 uppercase">Название теста</label>
+        <input type="text" id="test-title-input" value="{{ test.title }}" 
+               class="text-xl font-bold text-slate-900 border-b border-transparent hover:border-gray-300 focus:border-blue-600 focus:outline-none bg-transparent py-1 w-full max-w-xl">
+    </div>
+    <button type="button" onclick="saveTestTitle()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">Сохранить название</button>
+</div>
+
+<script>
+async function saveTestTitle() {
+    const newTitle = document.getElementById('test-title-input').value.trim();
+    if (!newTitle) return alert('Название не может быть пустым');
+    
+    try {
+        const res = await fetch('/api/tests/{{ test.id }}', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: newTitle })
+        });
+        if (!res.ok) throw new Error('Ошибка сохранения');
+        alert('Название успешно обновлено!');
+    } catch (e) {
+        alert(e.message);
+    }
+}
+</script>
+
 <!-- Панель версии -->
 <div class="card p-4 mb-6 space-y-3">
     <div class="flex flex-wrap items-center gap-3">
@@ -18,11 +46,19 @@
             <option value="{{ v.id }}">v{{ v.version_no }} — {{ v.status_label }}</option>
             {% endfor %}
         </select>
+
         <button onclick="publishCurrent()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm">Опубликовать версию</button>
+
         {% else %}
         <span class="text-sm text-gray-500">Версий ещё нет.</span>
         {% endif %}
+
         <button onclick="createVersion()" class="bg-gray-800 hover:bg-gray-900 text-white px-3 py-2 rounded text-sm">+ Новая версия</button>
+
+	<!-- Кнопка сброса попыток для редактирования заблокированных тестов -->
+
+	<button onclick="clearAttempts()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm">Очистить попытки теста</button>
+
         <span id="version-status" class="text-xs text-gray-500 ml-auto"></span>
     </div>
     
@@ -441,6 +477,17 @@ async function createVersion() {
         toast('Версия создана', 'success');
         location.href = '/tests/' + TEST_ID + '/edit?version_id=' + v.id;
     } catch (e) { toast(e.message, 'error'); }
+}
+
+async function clearAttempts() {
+    if (!confirm('Внимание! Это удалит все старые прохождения и попытки студентов по этому тесту, чтобы вы могли изменить шкалы и ключи. Продолжить?')) return;
+    try {
+        const res = await api('POST', '/api/tests/' + TEST_ID + '/clear-attempts');
+        toast('Успешно удалено попыток: ' + res.deleted_attempts, 'success');
+        setTimeout(() => location.reload(), 1000);
+    } catch (e) {
+        toast(e.message, 'error');
+    }
 }
 
 async function publishCurrent() {

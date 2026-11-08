@@ -40,8 +40,8 @@
 {% else %}
 
 {% if attempt.version.instruction %}
-<div class="card p-5 mb-5 bg-blue-50 border border-blue-100">
-    <div class="text-sm text-blue-900">{{ attempt.version.instruction }}</div>
+<div class="card p-5 mb-5 bg-blue-50 border border-blue-100 whitespace-pre-line text-sm text-blue-900 leading-relaxed">
+    <strong>Инструкция:</strong><br>{{ attempt.version.instruction }}
 </div>
 {% endif %}
 
@@ -159,6 +159,5 @@ async function abortAttempt() {
         location.href = '/student';
     } catch (e) { toast(e.message, 'error'); }
 }
-
 </script>
 {% endblock %}

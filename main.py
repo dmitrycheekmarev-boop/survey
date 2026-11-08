@@ -434,6 +434,10 @@ def scale_result_to_dict(result) -> dict:
 # 1. PYDANTIC-СХЕМЫ (тела запросов API)
 # ===========================================================================
 
+class TestUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    is_active: Optional[bool] = None
 
 class LoginRequest(BaseModel):
     login: str = Field(..., min_length=1)
@@ -809,6 +813,25 @@ def health() -> JSONResponse:
 # 6. API: АУТЕНТИФИКАЦИЯ И СЕССИИ
 # ===========================================================================
 
+@app.get("/dashboard", tags=["pages"], include_in_schema=False)
+def page_dashboard(request: Request, db: Session = Depends(get_db)):
+    user = _session_user(request, db)
+    if not user:
+        return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    if user.is_student and not (user.is_admin or user.is_methodist):
+        return RedirectResponse("/student", status_code=status.HTTP_302_FOUND)
+    
+    tests_count = db.query(Test).count()
+    sequences_count = db.query(TestSequence).count()
+    
+    return render(
+        request, 
+        "dashboard.html", 
+        user=user, 
+        active="dashboard",
+        tests_count=tests_count,
+        sequences_count=sequences_count
+    )
 
 @app.post("/api/auth/login", tags=["auth"])
 def api_login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)):
@@ -954,7 +977,7 @@ def update_test(
     db: Session = Depends(get_db),
     user: User = Depends(require_permission("tests.edit")),
 ):
-    """Обновить тест."""
+    """Обновить название, описание или активность теста."""
     test = db.get(Test, test_id)
     if not test:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Тест не найден")
@@ -1282,6 +1305,7 @@ def _sync_question_options(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=f"Шкала {scale_id} не принадлежит версии теста",
                 )
+        # Удаляем старые ключи варианта перед записью новых
         for old in list(option.scores):
             db.delete(old)
         db.flush()
@@ -1421,6 +1445,33 @@ def get_version(
     include_keys = not user.has_role(ROLE_STUDENT)
     return version_detail_to_dict(version, include_keys=include_keys)
 
+@app.post("/api/tests/{test_id}/clear-attempts", tags=["tests"])
+def clear_test_attempts(
+    test_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_permission("tests.edit")),  # Изменили здесь
+):
+    """Сбросить/удалить все попытки и историю прохождений по тесту (для перенастройки ключей)."""
+    test = db.get(Test, test_id)
+    if not test:
+        raise HTTPException(status_code=404, detail="Тест не найден")
+    
+    version_ids = [v.id for v in test.versions]
+    if not version_ids:
+        return {"ok": True, "deleted_attempts": 0}
+
+    attempts = db.query(Attempt).filter(Attempt.version_id.in_(version_ids)).all()
+    attempt_ids = [a.id for a in attempts]
+
+    deleted_count = len(attempt_ids)
+    if attempt_ids:
+        db.query(models.UserTestProgress).filter(models.UserTestProgress.test_id == test_id).delete(synchronize_session=False)
+        db.query(Attempt).filter(Attempt.id.in_(attempt_ids)).delete(synchronize_session=False)
+
+    log_action(db, user_id=user.id, action="clear_attempts", entity_type="test", entity_id=test_id, details={"deleted_count": deleted_count})
+    db.commit()
+    
+    return {"ok": True, "deleted_attempts": deleted_count}
 
 @app.post("/api/versions/{version_id}/publish", tags=["versions"])
 def publish_version(
@@ -1495,6 +1546,21 @@ def create_scale(
     db.refresh(scale)
     return scale_to_dict(scale)
 
+@app.put("/api/versions/{version_id}", tags=["versions"])
+def update_version_instruction(
+    version_id: int,
+    payload: VersionCreate, # или аналогичная схема с полем instruction
+    db: Session = Depends(get_db),
+    user: User = Depends(require_permission("tests.edit")),
+):
+    version = db.get(TestVersion, version_id)
+    if not version:
+        raise HTTPException(status_code=404, detail="Версия не найдена")
+    if payload.instruction is not None:
+        version.instruction = payload.instruction
+    db.commit()
+    db.refresh(version)
+    return version_to_dict(version, with_content=True)
 
 @app.put("/api/scales/{scale_id}", tags=["scales"])
 @app.patch("/api/scales/{scale_id}", tags=["scales"])
