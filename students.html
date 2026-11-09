@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Список студентов — Конструктор опросников{% endblock %}
+{% block heading %}Список студентов{% endblock %}
+
+{% block content %}
+<div class="card overflow-hidden">
+    <table class="min-w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">Логин</th>
+                <th class="text-left px-4 py-3 font-medium">ФИО</th>
+                <th class="text-left px-4 py-3 font-medium">E-mail</th>
+                <th class="text-left px-4 py-3 font-medium">Статус</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for u in students %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ u.login }}</td>
+                <td class="px-4 py-3 font-medium text-gray-900">{{ u.full_name }}</td>
+                <td class="px-4 py-3 text-gray-600">{{ u.email or '—' }}</td>
+                <td class="px-4 py-3">
+                    {% if u.is_active %}
+                        <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">активен</span>
+                    {% else %}
+                        <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">заблокирован</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="px-4 py-8 text-center text-gray-400">Студентов нет.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

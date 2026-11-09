@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Статистика — Конструктор опросников{% endblock %}
+{% block heading %}Статистика{% endblock %}
+
+{% block content %}
+<div class="card p-4 mb-6 flex flex-wrap items-center gap-3">
+    <label class="text-sm font-medium text-gray-600">Тест:</label>
+    <select id="test-select" class="border border-gray-300 rounded px-3 py-2 text-sm min-w-64">
+        <option value="">— выберите тест —</option>
+        {% for t in tests %}
+        <option value="{{ t.id }}">{{ t.title }}</option>
+        {% endfor %}
+    </select>
+    <button onclick="loadStats()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">Показать</button>
+</div>
+
+<div id="stats-result"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadStats() {
+    const testId = document.getElementById('test-select').value;
+    const box = document.getElementById('stats-result');
+    if (!testId) { box.innerHTML = ''; return; }
+    box.innerHTML = '<div class="text-sm text-gray-400">Загрузка...</div>';
+    try {
+        const data = await api('GET', '/api/statistics/tests/' + testId);
+        renderStats(data);
+    } catch (e) {
+        box.innerHTML = '<div class="card p-6 text-red-600 text-sm">' + esc(e.message) + '</div>';
+    }
+}
+
+function renderStats(data) {
+    const cards =
+        '<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">'
+        + card('Завершённых попыток', data.completed_attempts)
+        + card('Уникальных студентов', data.unique_students)
+        + card('Средний итоговый балл', data.avg_total_score != null ? data.avg_total_score : '—')
+        + '</div>';
+
+    const rows = (data.scales || []).map(function (s) {
+        return '<tr class="hover:bg-gray-50">'
+            + '<td class="px-4 py-3"><div class="font-medium text-gray-900">' + esc(s.scale_name) + '</div>'
+            + '<div class="text-xs text-gray-400 font-mono">' + esc(s.scale_code) + '</div></td>'
+            + '<td class="px-4 py-3">' + s.count + '</td>'
+            + '<td class="px-4 py-3">' + (s.avg != null ? s.avg : '—') + '</td>'
+            + '<td class="px-4 py-3">' + (s.min != null ? s.min : '—') + '</td>'
+            + '<td class="px-4 py-3">' + (s.max != null ? s.max : '—') + '</td>'
+            + '</tr>';
+    }).join('') || '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">Нет завершённых попыток.</td></tr>';
+
+    const table =
+        '<div class="card overflow-hidden">'
+        + '<div class="px-4 py-3 bg-gray-50 border-b border-gray-100 text-sm font-medium text-gray-600">Средние значения по шкалам</div>'
+        + '<table class="min-w-full text-sm"><thead class="text-gray-500"><tr>'
+        + '<th class="text-left px-4 py-3 font-medium">Шкала</th>'
+        + '<th class="text-left px-4 py-3 font-medium">N</th>'
+        + '<th class="text-left px-4 py-3 font-medium">Среднее</th>'
+        + '<th class="text-left px-4 py-3 font-medium">Мин</th>'
+        + '<th class="text-left px-4 py-3 font-medium">Макс</th>'
+        + '</tr></thead><tbody class="divide-y divide-gray-100">' + rows + '</tbody></table></div>';
+
+    document.getElementById('stats-result').innerHTML = cards + table;
+}
+
+function card(label, value) {
+    return '<div class="card p-5"><div class="text-sm text-gray-500">' + esc(label) + '</div>'
+        + '<div class="text-3xl font-bold text-gray-900 mt-1">' + esc(value) + '</div></div>';
+}
+</script>
+{% endblock %}

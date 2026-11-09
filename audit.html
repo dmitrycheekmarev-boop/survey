@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Журнал аудита — Конструктор опросников{% endblock %}
+{% block heading %}Журнал аудита{% endblock %}
+
+{% block content %}
+<div class="card overflow-hidden">
+    <table class="min-w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600">
+            <tr>
+                <th class="text-left px-4 py-3 font-medium">Время</th>
+                <th class="text-left px-4 py-3 font-medium">Пользователь</th>
+                <th class="text-left px-4 py-3 font-medium">Действие</th>
+                <th class="text-left px-4 py-3 font-medium">Объект</th>
+                <th class="text-left px-4 py-3 font-medium">Детали</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for log in logs %}
+            <tr class="hover:bg-gray-50 align-top">
+                <td class="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{{ log.created_at.strftime('%d.%m.%Y %H:%M:%S') if log.created_at else '' }}</td>
+                <td class="px-4 py-3">
+                    {% if log.user %}
+                        <span class="text-gray-800">{{ log.user.full_name }}</span>
+                    {% else %}
+                        <span class="text-gray-400">система</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3">
+                    <span class="text-xs bg-gray-100 border border-gray-200 text-gray-700 px-2 py-1 rounded">{{ log.action }}</span>
+                </td>
+                <td class="px-4 py-3 text-gray-600">
+                    {{ log.entity_type }}{% if log.entity_id %} #{{ log.entity_id }}{% endif %}
+                </td>
+                <td class="px-4 py-3 text-xs text-gray-500 font-mono break-all max-w-md">{{ log.details }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="px-4 py-8 text-center text-gray-400">Записей нет.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

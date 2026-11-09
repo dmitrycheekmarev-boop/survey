@@ -412,7 +412,7 @@ class TestVersion(Base):
     test: Test = relationship("Test", back_populates="versions")
     author: User = relationship("User", back_populates="created_versions", foreign_keys=[created_by])
     scales: list["Scale"] = relationship(
-        "Scale", back_populates="version", cascade="all, delete-orphan", order_by="Scale.code"
+        "Scale", back_populates="version", cascade="all, delete-orphan", order_by="Scale.id"
     )
     questions: list["Question"] = relationship(
         "Question",

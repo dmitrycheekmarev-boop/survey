@@ -2265,15 +2265,33 @@ def compute_attempt_results(db: Session, attempt: Attempt) -> list:
     scale_raw: dict[int, Decimal] = {s.id: Decimal("0") for s in scales}
     scale_answers: dict[int, set] = {s.id: set() for s in scales}
 
-    # 1) Сбор «сырых» вкладов из ответов и ключей (option_scores / manual_scores).
+    # 1) Сбор «сырых» вкладов из ответов и ключей (option_scores / manual_scores / текстовые ключи).
     for answer in attempt.answers:
         question = answer.question
         if question.is_open_text:
+            # Сначала проверяем экспертные оценки (если есть)
             for ms in answer.manual_scores:
                 if ms.scale_id in scale_raw:
                     scale_raw[ms.scale_id] += Decimal(str(ms.score))
                     scale_answers[ms.scale_id].add(answer.id)
+            
+            # А также автоматическая проверка слов из открытого ответа по ключам вариантов (raw_value)
+            if answer.answer_text:
+                # Нормализуем текст ответа студента (разбиваем на слова в нижнем регистре)
+                import re
+                student_words = set(re.findall(r'\w+', answer.answer_text.lower()))
+                
+                for opt in question.answer_options:
+                    if opt.raw_value:
+                        # Ключевое слово или фраза из raw_value варианта ответа
+                        keyword = opt.raw_value.strip().lower()
+                        if keyword in student_words or keyword in answer.answer_text.lower():
+                            for osc in opt.scores:
+                                if osc.scale_id in scale_raw:
+                                    scale_raw[osc.scale_id] += Decimal(str(osc.score))
+                                    scale_answers[osc.scale_id].add(answer.id)
             continue
+            
         for link in answer.selected_options:
             for osc in link.option.scores:
                 if osc.scale_id in scale_raw:
